@@ -123,7 +123,11 @@ def trigger_poet_miners(expected_chain_length, the_miners_list, poet_block_time,
         for obj in the_miners_list:
             if PoET_server.network_waiting_times[obj.address][counter + 1] == least_waiting_time:
                 least_waiting_time_for.append(obj.address)
+                
+        print("sleeping (least_waiting_time):" + str(least_waiting_time) + "secs")
         time.sleep(least_waiting_time)
+        print("wake up")
+        
         if Parallel_PoW_mining:
             # parallel approach
             for obj in the_miners_list:
@@ -146,7 +150,10 @@ def trigger_poet_miners(expected_chain_length, the_miners_list, poet_block_time,
             now_time_must_be = start_time + ((counter + 1) * poet_block_time)
             difference = now_time_must_be - time.time()
             if difference > 0:
+                
+                print("sleeping (difference):" + str(difference) + "secs")
                 time.sleep(difference)
+                print("wake up")
 
 
 def trigger_dpos_miners(expected_chain_length, the_miners_list, number_of_delegates, numOfTXperBlock, the_type_of_consensus, blockchainFunction, Parallel_PoW_mining):
