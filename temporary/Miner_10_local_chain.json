@@ -1,0 +1,37 @@
+{
+    "0": {
+        "Header": {
+            "generator_id": "The Network",
+            "hash": "3a91ac6b97f53ed16acfbd57056b817a9c9c4d143f98381e41b9ab781190ba24",
+            "blockNo": 0
+        },
+        "Body": {
+            "transactions": [
+                "genesis_block",
+                "Miner_1",
+                "Miner_2",
+                "Miner_3",
+                "Miner_4",
+                "Miner_5",
+                "Miner_6",
+                "Miner_7",
+                "Miner_8",
+                "Miner_9",
+                "Miner_10",
+                "Miner_11",
+                "Miner_12",
+                "Miner_13",
+                "Miner_14",
+                "Miner_15",
+                "Miner_16",
+                "Miner_17",
+                "Miner_18",
+                "Miner_19",
+                "Miner_20"
+            ],
+            "nonce": 0,
+            "previous_hash": 0,
+            "timestamp": 1670093236.460519
+        }
+    }
+}
