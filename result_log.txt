@@ -1,0 +1,3 @@
+num of tx: 8 , average tx time(secs): 1.4831320941448212 , elapsed time(secs): 11.86505675315857
+num of tx: 8 , average tx time(secs): 1.4835086166858673 , elapsed time(secs): 11.868068933486938
+num of tx: 8 , average tx time(secs): 1.471220999956131 , elapsed time(secs): 11.769767999649048

@@ -18,10 +18,10 @@ class Fog:
         self.tasks.extend(tasks)
         self.list_of_connected_users.add(sender)
 
-    def send_tasks_to_BC(self, user_informed):
+    def send_tasks_to_BC(self, user_informed, isblackgun):
         temporary_task = random.choice(self.tasks)
         if not user_informed:
-            output.inform_of_fog_procedure(temporary_task[-1], self.STOR_PLC)
+            output.inform_of_fog_procedure(temporary_task[-1], self.STOR_PLC, isblackgun)
         if temporary_task[-1] == 1:
             for task in self.tasks:
                 if self.STOR_PLC == 1:

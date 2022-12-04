@@ -14,10 +14,19 @@ import AIModule
 num_of_consensus = 0
 
 
-def choose_consensus():
+def choose_consensus(isblackgun):
     while True:
         output.choose_consensus(blockchain_CAs)
         global num_of_consensus
+        
+        ######################################################################
+        if isblackgun == True:
+            num_of_consensus = 2 #PoS
+            prepare_necessary_files()
+            print("[Auto by Blackgun] " + str(num_of_consensus))
+            break
+        ######################################################################
+        
         num_of_consensus = input()
         if num_of_consensus in blockchain_CAs:
             num_of_consensus = int(num_of_consensus)

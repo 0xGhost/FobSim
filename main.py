@@ -9,7 +9,7 @@ import time
 import modification
 import new_consensus_module
 
-
+isblackgun = True
 data = modification.read_file("Sim_parameters.json")
 list_of_end_users = []
 fogNodes = []
@@ -45,9 +45,18 @@ def user_input():
 
 
 def choose_functionality():
+
     while True:
         output.choose_functionality()
         global blockchainFunction
+        
+        ######################################################################
+        if isblackgun == True:
+            blockchainFunction = 3 #Payment
+            print("[Auto by Blackgun] " + str(blockchainFunction))
+            break
+        ######################################################################
+        
         blockchainFunction = input()
         if blockchainFunction in blockchain_functions:
             blockchainFunction = int(blockchainFunction)
@@ -60,6 +69,14 @@ def choose_placement():
     while True:
         output.choose_placement()
         global blockchainPlacement
+        
+        ######################################################################
+        if isblackgun == True:
+            blockchainPlacement = 2 #End_User
+            print("[Auto by Blackgun] " + str(blockchainPlacement))
+            break
+        ######################################################################
+        
         blockchainPlacement = input()
         if blockchainPlacement in blockchain_placement_options:
             blockchainPlacement = int(blockchainPlacement)
@@ -214,7 +231,7 @@ def initiate_genesis_block(AI_wanted):
 def send_tasks_to_BC():
     global user_informed
     for node in fogNodes:
-        node.send_tasks_to_BC(user_informed)
+        node.send_tasks_to_BC(user_informed, isblackgun)
         if not user_informed:
             user_informed = True
 
@@ -223,6 +240,7 @@ def store_fog_data():
     for node in fogNodes:
         log = open('temporary/Fog_node_'+str(node.address)+'.txt', 'w')
         log.write(str(node.local_storage))
+
 
 
 def inform_miners_of_users_wallets():
@@ -236,11 +254,16 @@ def inform_miners_of_users_wallets():
         for i in range(len(miner_list)):
             modification.rewrite_file(str("temporary/" + miner_list[i].address + "_users_wallets.json"), user_wallets)
 
-
+import sys
 if __name__ == '__main__':
+    # 
+    if len(sys.argv) == 2:
+        isblackgun =bool(sys.argv[1])
+        print(str(isblackgun))    
+    
     user_input()
     initiate_network()
-    type_of_consensus = new_consensus_module.choose_consensus()
+    type_of_consensus = new_consensus_module.choose_consensus(isblackgun)
     trans_delay = define_trans_delay(blockchainPlacement)
     miner_list = initiate_miners()
     AI_assisted_mining_wanted = give_miners_authorization(miner_list, type_of_consensus)
@@ -260,5 +283,9 @@ if __name__ == '__main__':
     output.finish()
     store_fog_data()
     elapsed_time = time.time() - time_start
+    number_of_TX = NumOfFogNodes * num_of_users_per_fog_node * NumOfTaskPerUser
+    average_time_of_TX = elapsed_time / number_of_TX
     print("elapsed time = " + str(elapsed_time) + " seconds")
-
+    print("[BG] average TX time = " + str(average_time_of_TX) + " seconds")
+    with open('result_log.txt', 'a+') as resultfile:
+        resultfile.write("num of tx: " + str(number_of_TX) + " , average tx time(secs): " + str(average_time_of_TX) + " , elapsed time(secs): " + str(elapsed_time) + "\n")
