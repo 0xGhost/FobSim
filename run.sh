@@ -1,3 +1,5 @@
 #!/bin/bash
-
-python3 main.py
+for i in {1..10}
+do
+    python3 main.py 1
+done

@@ -283,9 +283,17 @@ if __name__ == '__main__':
     output.finish()
     store_fog_data()
     elapsed_time = time.time() - time_start
-    number_of_TX = NumOfFogNodes * num_of_users_per_fog_node * NumOfTaskPerUser
+    number_of_user = NumOfFogNodes * num_of_users_per_fog_node
+    number_of_TX = number_of_user * NumOfTaskPerUser
     average_time_of_TX = elapsed_time / number_of_TX
     print("elapsed time = " + str(elapsed_time) + " seconds")
     print("[BG] average TX time = " + str(average_time_of_TX) + " seconds")
     with open('result_log.txt', 'a+') as resultfile:
-        resultfile.write("num of tx: " + str(number_of_TX) + " , average tx time(secs): " + str(average_time_of_TX) + " , elapsed time(secs): " + str(elapsed_time) + "\n")
+        resultfile.write("No. user: " + str(number_of_user))
+        resultfile.write(", No. miner: " + str(NumOfMiners))
+        resultfile.write(" , No. minerNeighbours: " + str(number_of_miner_neighbours))
+        resultfile.write(" , No. tx: " + str(number_of_TX))
+        resultfile.write(" , average tx time(secs): " + str(average_time_of_TX))
+        resultfile.write(" , elapsed time(secs): " + str(elapsed_time) + "\n")
+    with open('result_avrTime.txt', 'a+') as resultTimeFile:
+        resultTimeFile.write(str(average_time_of_TX)+"\n")
