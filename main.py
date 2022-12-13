@@ -52,7 +52,8 @@ def choose_functionality():
         
         ######################################################################
         if isblackgun == True:
-            blockchainFunction = 3 #Payment
+            if blockchainFunction == 0:
+                blockchainFunction = 3 #Payment
             print("[Auto by Blackgun] " + str(blockchainFunction))
             break
         ######################################################################
@@ -72,7 +73,8 @@ def choose_placement():
         
         ######################################################################
         if isblackgun == True:
-            blockchainPlacement = 2 #End_User
+            if blockchainPlacement == 0:
+                blockchainPlacement = 2 #End_User
             print("[Auto by Blackgun] " + str(blockchainPlacement))
             break
         ######################################################################
@@ -258,12 +260,22 @@ import sys
 if __name__ == '__main__':
     # 
     if len(sys.argv) == 2:
-        isblackgun =bool(sys.argv[1])
-        print(str(isblackgun))    
+        isblackgun = bool(sys.argv[1])
+        blockchainFunction = 3 #Payment
+        blockchainPlacement = 2 #End_User
+        num_of_consensus = 2 #PoS
+        print("[blackgun auto mode1]" + str(isblackgun)) 
+    
+    if len(sys.argv) == 5:
+        isblackgun = bool(sys.argv[1])
+        blockchainFunction = int(sys.argv[2])
+        blockchainPlacement = int(sys.argv[3])
+        num_of_consensus = int(sys.argv[4])
+        print("[blackgun auto mode2]" + str(isblackgun)) 
     
     user_input()
     initiate_network()
-    type_of_consensus = new_consensus_module.choose_consensus(isblackgun)
+    type_of_consensus = new_consensus_module.choose_consensus(isblackgun, num_of_consensus)
     trans_delay = define_trans_delay(blockchainPlacement)
     miner_list = initiate_miners()
     AI_assisted_mining_wanted = give_miners_authorization(miner_list, type_of_consensus)
