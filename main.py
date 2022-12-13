@@ -10,6 +10,7 @@ import modification
 import new_consensus_module
 
 isblackgun = True
+machineName = "[noname]"
 data = modification.read_file("Sim_parameters.json")
 list_of_end_users = []
 fogNodes = []
@@ -272,6 +273,14 @@ if __name__ == '__main__':
         blockchainPlacement = int(sys.argv[3])
         num_of_consensus = int(sys.argv[4])
         print("[blackgun auto mode2]" + str(isblackgun)) 
+        
+    if len(sys.argv) == 6:
+        isblackgun = bool(sys.argv[1])
+        machineName = sys.argv[2]
+        blockchainFunction = int(sys.argv[3])
+        blockchainPlacement = int(sys.argv[4])
+        num_of_consensus = int(sys.argv[5])
+        print("[blackgun auto mode3]" + str(isblackgun)) 
     
     user_input()
     initiate_network()
@@ -300,12 +309,12 @@ if __name__ == '__main__':
     average_time_of_TX = elapsed_time / number_of_TX
     print("elapsed time = " + str(elapsed_time) + " seconds")
     print("[BG] average TX time = " + str(average_time_of_TX) + " seconds")
-    with open('result_log.txt', 'a+') as resultfile:
+    with open(machineName + 'result_log.txt', 'a+') as resultfile:
         resultfile.write("No. user: " + str(number_of_user))
         resultfile.write(", No. miner: " + str(NumOfMiners))
         resultfile.write(" , No. minerNeighbours: " + str(number_of_miner_neighbours))
         resultfile.write(" , No. tx: " + str(number_of_TX))
         resultfile.write(" , average tx time(secs): " + str(average_time_of_TX))
         resultfile.write(" , elapsed time(secs): " + str(elapsed_time) + "\n")
-    with open('result_avrTime.txt', 'a+') as resultTimeFile:
+    with open(machineName + 'result_avrTime.txt', 'a+') as resultTimeFile:
         resultTimeFile.write(str(average_time_of_TX)+"\n")

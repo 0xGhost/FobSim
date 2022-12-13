@@ -1,3 +1,4 @@
+No. user: 5, No. miner: 12 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 4.407954323291778 , elapsed time(secs): 88.15908646583557
 No. user: 5, No. miner: 5 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 1.6294809103012085 , elapsed time(secs): 32.58961820602417
 No. user: 5, No. miner: 5 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 1.6293481111526489 , elapsed time(secs): 32.58696222305298
 No. user: 5, No. miner: 5 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 1.6242952227592469 , elapsed time(secs): 32.48590445518494
