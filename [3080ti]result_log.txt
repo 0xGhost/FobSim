@@ -1,0 +1,1 @@
+No. user: 5, No. miner: 8 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 3.424960672855377 , elapsed time(secs): 68.49921345710754
