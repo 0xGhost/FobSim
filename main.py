@@ -38,6 +38,27 @@ Asymmetric_key_length = data['Asymmetric_key_length']
 number_of_DPoS_delegates = data['Num_of_DPoS_delegates']
 user_informed = False
 
+def resetSimData():
+    global data, number_of_miner_neighbours, NumOfFogNodes, NumOfTaskPerUser, NumOfMiners, numOfTXperBlock, num_of_users_per_fog_node
+    global expected_chain_length, gossip_activated, Automatic_PoA_miners_authorization, Parallel_PoW_mining, delay_between_fog_nodes
+    global delay_between_end_users, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates
+    
+    data = modification.read_file(machineName+"Sim_parameters.json")
+    number_of_miner_neighbours = data["number_of_each_miner_neighbours"]
+    NumOfFogNodes = data["NumOfFogNodes"]
+    NumOfTaskPerUser = data["NumOfTaskPerUser"]
+    NumOfMiners = data["NumOfMiners"]
+    numOfTXperBlock = data["numOfTXperBlock"]
+    num_of_users_per_fog_node = data["num_of_users_per_fog_node"]
+    expected_chain_length = ceil((num_of_users_per_fog_node * NumOfTaskPerUser * NumOfFogNodes) / numOfTXperBlock)
+    gossip_activated = data["Gossip_Activated"]
+    Automatic_PoA_miners_authorization = data["Automatic_PoA_miners_authorization?"]
+    Parallel_PoW_mining = data["Parallel_PoW_mining?"]
+    delay_between_fog_nodes = data["delay_between_fog_nodes"]
+    delay_between_end_users = data["delay_between_end_users"]
+    poet_block_time = data['poet_block_time']
+    Asymmetric_key_length = data['Asymmetric_key_length']
+    number_of_DPoS_delegates = data['Num_of_DPoS_delegates']
 
 def user_input():
     modification.initiate_files(gossip_activated)
@@ -280,6 +301,8 @@ if __name__ == '__main__':
         blockchainFunction = int(sys.argv[3])
         blockchainPlacement = int(sys.argv[4])
         num_of_consensus = int(sys.argv[5])
+        blockchain.setPrefix(sys.argv[2])
+        resetSimData()
         print("[blackgun auto mode3]" + str(isblackgun)) 
     
     user_input()

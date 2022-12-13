@@ -4,12 +4,17 @@ import random
 import output
 import modification
 
-data = modification.read_file("Sim_parameters.json")
+
+file_prefix = ""
+data = modification.read_file(file_prefix + "Sim_parameters.json")
 diff = data["puzzle_difficulty"] * 4
 target = 2 ** (256 - diff)
 list_of_stakes = [['Network', 0]]
 mining_award = data["mining_award"]
 
+def setPrefix(pre):
+    file_prefix = pre
+    data = modification.read_file(file_prefix + "Sim_parameters.json")
 
 def get_max_hash():
     return target
