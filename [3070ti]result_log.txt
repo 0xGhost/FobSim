@@ -31,3 +31,6 @@ No. user: 5, No. miner: 100 , No. minerNeighbours: 4 , No. tx: 20 , average tx t
 No. user: 5, No. miner: 100 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 33.10763926506043 , elapsed time(secs): 662.1527853012085
 
 No. user: 5, No. miner: 500 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 163.24652136564254 , elapsed time(secs): 3264.930427312851
+
+pow
+No. user: 5, No. miner: 50 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 7.679857766628265 , elapsed time(secs): 153.5971553325653
