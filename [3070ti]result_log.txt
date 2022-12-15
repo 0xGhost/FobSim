@@ -29,7 +29,8 @@ No. user: 5, No. miner: 100 , No. minerNeighbours: 4 , No. tx: 20 , average tx t
 No. user: 5, No. miner: 100 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 34.543431556224824 , elapsed time(secs): 690.8686311244965
 No. user: 5, No. miner: 100 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 31.247733306884765 , elapsed time(secs): 624.9546661376953
 No. user: 5, No. miner: 100 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 33.10763926506043 , elapsed time(secs): 662.1527853012085
-No. user: 5, No. miner: 12 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 4.372999167442321 , elapsed time(secs): 87.45998334884644
-No. user: 5, No. miner: 12 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 3.8251558423042296 , elapsed time(secs): 76.5031168460846
-No. user: 5, No. miner: 7 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 2.1972280502319337 , elapsed time(secs): 43.94456100463867
-No. user: 5, No. miner: 17 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 5.539087533950806 , elapsed time(secs): 110.78175067901611
+
+No. user: 5, No. miner: 500 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 163.24652136564254 , elapsed time(secs): 3264.930427312851
+
+pow
+No. user: 5, No. miner: 50 , No. minerNeighbours: 4 , No. tx: 20 , average tx time(secs): 7.679857766628265 , elapsed time(secs): 153.5971553325653

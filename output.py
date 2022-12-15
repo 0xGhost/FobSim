@@ -30,20 +30,21 @@ def block_success_addition(self_address, generator_id):
 
 
 def AI_assisted_mining_wanted():
-    print("Would you like to simulate AI-assisted mining along with the classical PoW mining (input Y/y to agree or N/n to discard)?\n")
-    while True:
-        try:
-            decision = input()
-            if decision in ['Y', 'y']:
-                wanted = True
-                break
-            elif decision in ['N', 'n']:
-                wanted = False
-                break
-            else:
-                print('Your input is incorrect, please try again:\n')
-        except Exception as e:
-            print(e)
+    print("Would you like to simulate AI-assisted mining along with the classical PoW mining (input Y/y to agree or N/n to discard)?\n   False[BlackgunAuto]")
+    wanted = False
+    # while True:
+    #     try:
+    #         decision = input()
+    #         if decision in ['Y', 'y']:
+    #             wanted = True
+    #             break
+    #         elif decision in ['N', 'n']:
+    #             wanted = False
+    #             break
+    #         else:
+    #             print('Your input is incorrect, please try again:\n')
+    #     except Exception as e:
+    #         print(e)
     if wanted:
         print(
             "Input the portion of miners (percentage out of all active) that should run this mining type (input 1--100)?\n")
