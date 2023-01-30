@@ -40,9 +40,9 @@ class Miner:
             new_block = self.abstract_block_building(blockchain_function, transactions, miner_list, type_of_consensus, AI_assisted_mining_wanted)
             output.block_info(new_block, type_of_consensus)
             
-            print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
+            #print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
             time.sleep(self.trans_delay)
-            print("miner wake up")
+            #print("miner wake up")
             
             for elem in miner_list:
                 if elem.address in self.neighbours:
@@ -83,9 +83,9 @@ class Miner:
                 if new_consensus_module.block_is_valid(type_of_consensus, new_block, self.top_block, self.next_pos_block_from, miner_list, self.delegates):
                     self.add(new_block, blockchain_function, expected_chain_length, miner_list)
                     
-                    print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
+                    #print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
                     time.sleep(self.trans_delay)
-                    print("miner wake up")
+                    #print("miner wake up")
                     
                     for elem in miner_list:
                         if elem.address in self.neighbours:

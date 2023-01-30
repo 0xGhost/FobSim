@@ -209,13 +209,16 @@ def pow_mining(block, AI_assisted_mining_wanted, is_adversary):
 
 
 def pow_classical_mining(block):
+    print("*************************************************** pow classical mining: ")
     if block['Body']['nonce'] > 4000000000/2:
         up = False
     else:
         up = True
+    print(" nonce = " + str(block['Body']['nonce']) + ", up = " + str(up) + ", diff = " + str(blockchain.diff) + ", target = " + str(blockchain.target))
     for i in range(1, 4000000000):
         block['Header']['hash'] = encryption_module.hashing_function(block['Body'])
         if int(block['Header']['hash'], 16) <= blockchain.target:
+            print("Mining finish. Tried " + str(i) + " times. Final nonce = " + str(block['Body']['nonce']))
             return block
         else:
             if up:
@@ -223,7 +226,7 @@ def pow_classical_mining(block):
             else:
                 block['Body']['nonce'] -= 1
             continue
-
+    print("Nonce not found, mining failed")
 
 def dpos_voting(the_miners_list):
     temp_file_py = modification.read_file('temporary/miner_wallets_log.json')

@@ -327,6 +327,7 @@ if __name__ == '__main__':
     output.finish()
     store_fog_data()
     elapsed_time = time.time() - time_start
+    
     number_of_user = NumOfFogNodes * num_of_users_per_fog_node
     number_of_TX = number_of_user * NumOfTaskPerUser
     average_time_of_TX = elapsed_time / number_of_TX

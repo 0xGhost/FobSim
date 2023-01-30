@@ -13,8 +13,16 @@ list_of_stakes = [['Network', 0]]
 mining_award = data["mining_award"]
 
 def setPrefix(pre):
+    global data 
+    global file_prefix
+    global diff
+    global target
+    global mining_award
     file_prefix = pre
     data = modification.read_file(file_prefix + "Sim_parameters.json")
+    diff = data["puzzle_difficulty"] * 4
+    target = 2 ** (256 - diff)
+    mining_award = data ["mining_award"]
 
 def get_max_hash():
     return target
