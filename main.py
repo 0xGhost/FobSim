@@ -8,9 +8,11 @@ from math import ceil
 import time
 import modification
 import new_consensus_module
+import test_data
 
 isblackgun = True
 machineName = "[noname]"
+
 data = modification.read_file("Sim_parameters.json")
 list_of_end_users = []
 fogNodes = []
@@ -315,30 +317,43 @@ if __name__ == '__main__':
     blockchain.stake(miner_list, type_of_consensus)
     initiate_genesis_block(AI_assisted_mining_wanted)
     send_tasks_to_BC()
+    
+    #print("++++++++++++++++++++++++++++ time start")
     time_start = time.time()
     if blockchainFunction == 2:
-        expected_chain_length = ceil((num_of_users_per_fog_node * NumOfTaskPerUser * NumOfFogNodes))
+        expected_chain_length = ceil((num_of_users_per_fog_node * NumOfTaskPerUser * NumOfFogNodes) / numOfTXperBlock)
+    #print("++++++++++++++++++++++++++++ A:"+str(time.time() - time_start))
+    
     new_consensus_module.miners_trigger(miner_list, type_of_consensus, expected_chain_length, Parallel_PoW_mining,
                                         numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length,
                                         number_of_DPoS_delegates, AI_assisted_mining_wanted)
-
+    print("totalBlockTime = " + str(test_data.totalBlockTime))
+    
+    #print("++++++++++++++++++++++++++++ B:"+str(time.time() - time_start))
     blockchain.award_winning_miners(len(miner_list), miner_list)
+    
     blockchain.fork_analysis(miner_list)
     output.finish()
     store_fog_data()
     elapsed_time = time.time() - time_start
+    #print("++++++++++++++++++++++++++++ time end")
     
     number_of_user = NumOfFogNodes * num_of_users_per_fog_node
     number_of_TX = number_of_user * NumOfTaskPerUser
-    average_time_of_TX = elapsed_time / number_of_TX
+    number_of_block = number_of_TX / numOfTXperBlock
+    print("number of block = " + str(number_of_block))
+    
+    print("totalBlockTime = " + str(test_data.totalBlockTime))
+    average_block_time = test_data.totalBlockTime / (float)(number_of_block)
+    
     print("elapsed time = " + str(elapsed_time) + " seconds")
-    print("[BG] average TX time = " + str(average_time_of_TX) + " seconds")
+    print("[BG] average block time = " + str(average_block_time) + " seconds")
     with open(machineName + 'result_log.txt', 'a+') as resultfile:
         resultfile.write("No. user: " + str(number_of_user))
         resultfile.write(", No. miner: " + str(NumOfMiners))
         resultfile.write(" , No. minerNeighbours: " + str(number_of_miner_neighbours))
         resultfile.write(" , No. tx: " + str(number_of_TX))
-        resultfile.write(" , average tx time(secs): " + str(average_time_of_TX))
+        resultfile.write(" , average block time(secs): " + str(average_block_time))
         resultfile.write(" , elapsed time(secs): " + str(elapsed_time) + "\n")
     with open(machineName + 'result_avrTime.txt', 'a+') as resultTimeFile:
-        resultTimeFile.write(str(average_time_of_TX)+"\n")
+        resultTimeFile.write(str(average_block_time)+"\n")

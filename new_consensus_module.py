@@ -86,7 +86,12 @@ def trigger_pow_miners(the_miners_list, the_type_of_consensus, expected_chain_le
 
 def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock,
                        blockchainFunction):
+    start_time = time.time()
+    #print(" ++++++++++++++++++++++++++++ AAstart")
+    
+    
     for counter in range(expected_chain_length):
+        #print(" ++++++++++++++++++++++++++++ AB:"+str(time.time() - start_time))
         randomly_chosen_miners = []
         x = int(round((len(the_miners_list) / 2), 0))
         for i in range(x):
@@ -94,6 +99,8 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
         biggest_stake = 0
         final_chosen_miner = the_miners_list[0]
         temp_file_py = modification.read_file('temporary/miners_stake_amounts.json')
+        #print(" ++++++++++++++++++++++++++++ AC:"+str(time.time() - start_time))
+        
         for chosen_miner in randomly_chosen_miners:
             stake = temp_file_py[chosen_miner.address]
             if stake > biggest_stake:
@@ -101,10 +108,20 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
                 final_chosen_miner = chosen_miner
         for entity in the_miners_list:
             entity.next_pos_block_from = final_chosen_miner.address
+        #print(" ++++++++++++++++++++++++++++ AD:"+str(time.time() - start_time))
+            
         if mempool.MemPool.qsize() != 0:
-            final_chosen_miner.build_block(numOfTXperBlock, mempool.MemPool, the_miners_list, the_type_of_consensus,
+            block_time = final_chosen_miner.build_block(numOfTXperBlock, mempool.MemPool, the_miners_list, the_type_of_consensus,
                                            blockchainFunction, expected_chain_length, None)
+            
+            print("====================== block time = " + str(block_time))
+            
+        #print(" ++++++++++++++++++++++++++++ AE:"+str(time.time() - start_time))
+            
         output.simulation_progress(counter, expected_chain_length)
+        #print(" ++++++++++++++++++++++++++++ AF:"+str(time.time() - start_time))
+        
+    #print(" ++++++++++++++++++++++++++++ AGend:"+str(time.time() - start_time))
 
 
 def trigger_poa_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock,
