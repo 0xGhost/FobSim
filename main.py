@@ -9,6 +9,9 @@ import time
 import modification
 import new_consensus_module
 import test_data
+from openpyxl import Workbook
+from openpyxl import load_workbook
+
 
 isblackgun = True
 machineName = "[noname]"
@@ -335,6 +338,16 @@ if __name__ == '__main__':
     blockchain.fork_analysis(miner_list)
     output.finish()
     store_fog_data()
+    
+    averageDownloadDataUsage = 0
+    averageUploadDataUsage = 0
+    for m in miner_list:
+        print(str(m.address) + " upload: " + str(m.uploadDataUsage) + " download: " + str(m.downloadDataUsage) + "(Byte)")
+        averageDownloadDataUsage += m.downloadDataUsage
+        averageUploadDataUsage += m.uploadDataUsage
+    averageUploadDataUsage /= NumOfMiners
+    averageDownloadDataUsage /= NumOfMiners
+    
     elapsed_time = time.time() - time_start
     #print("++++++++++++++++++++++++++++ time end")
     
@@ -345,15 +358,37 @@ if __name__ == '__main__':
     
     print("totalBlockTime = " + str(test_data.totalBlockTime))
     average_block_time = test_data.totalBlockTime / (float)(number_of_block)
+    average_block_time_ms = average_block_time * 1000
     
     print("elapsed time = " + str(elapsed_time) + " seconds")
     print("[BG] average block time = " + str(average_block_time) + " seconds")
     with open(machineName + 'result_log.txt', 'a+') as resultfile:
         resultfile.write("No. user: " + str(number_of_user))
-        resultfile.write(", No. miner: " + str(NumOfMiners))
+        resultfile.write(" , No. miner: " + str(NumOfMiners))
         resultfile.write(" , No. minerNeighbours: " + str(number_of_miner_neighbours))
         resultfile.write(" , No. tx: " + str(number_of_TX))
+        resultfile.write(" , No. block: " + str(number_of_block))
         resultfile.write(" , average block time(secs): " + str(average_block_time))
+        resultfile.write(" , average upload data (bytes): " + str(averageUploadDataUsage))
+        resultfile.write(" , average download data (bytes): " + str(averageDownloadDataUsage))
         resultfile.write(" , elapsed time(secs): " + str(elapsed_time) + "\n")
     with open(machineName + 'result_avrTime.txt', 'a+') as resultTimeFile:
         resultTimeFile.write(str(average_block_time)+"\n")
+    
+    filename = machineName + 'result.xlsx'
+    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, number_of_block, delay_between_fog_nodes, delay_between_end_users, gossip_activated, averageUploadDataUsage, averageDownloadDataUsage, average_block_time_ms, elapsed_time]
+    
+    # Confirm file exists. 
+    # If not, create it, add headers, then append new data
+    try:
+        wb = load_workbook(filename)
+        ws = wb.worksheets[0]  # select first worksheet
+    except FileNotFoundError:
+        headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'No. tx:', 'No. block', 'delay between fog node', 'delay between end users', 'gossip', 'average upload data(bytes)', 'average download data(bytes)', 'average block time(ms)', 'elapsed time(secs)']
+        wb = Workbook()
+        ws = wb.active
+        ws.append(headers_row)
+
+    ws.append(new_row)
+    wb.save(filename)
+    

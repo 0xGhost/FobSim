@@ -22,7 +22,7 @@
 # 5: Delegated Proof of Stake (DPoS)
 # 6: Example New CA
 
-for i in {1..1}
+for i in {1..5}
 do
     # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus]
     python3 main.py 1 [3070ti] 1 2 2

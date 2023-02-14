@@ -6,7 +6,7 @@ import output
 import encryption_module
 import modification
 import test_data
-
+import sys
 
 class Miner:
     def __init__(self, address, trans_delay, gossiping):
@@ -22,6 +22,8 @@ class Miner:
         self.amount_to_be_staked = None
         self.delegates = None
         self.adversary = False
+        self.uploadDataUsage = 0
+        self.downloadDataUsage = 0
 
     def build_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, expected_chain_length, AI_assisted_mining_wanted):
         block_time = 0
@@ -58,6 +60,7 @@ class Miner:
             time_before_send = time.time()
             for elem in miner_list:
                 if elem.address in self.neighbours:
+                    self.uploadDataUsage += sys.getsizeof(new_block)
                     elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function,
                                            expected_chain_length)
             time_cost_of_send = time.time() - time_before_send
@@ -87,6 +90,7 @@ class Miner:
     def receive_new_block(self, new_block, type_of_consensus, miner_list, blockchain_function, expected_chain_length): #TODO: add start timestamp
         time_start = time.time()
         #print("   ++++++++++++++++++++++++++++ ADBA start:")
+        self.downloadDataUsage += sys.getsizeof(new_block)
         
         block_already_received = False
         local_chain_temporary_file = modification.read_file(str("temporary/" + self.address + "_local_chain.json"))
@@ -122,6 +126,7 @@ class Miner:
                     
                     for elem in miner_list:
                         if elem.address in self.neighbours:
+                            self.uploadDataUsage += sys.getsizeof(new_block)
                             elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function, expected_chain_length)
 
                 

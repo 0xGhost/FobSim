@@ -6,6 +6,4 @@ def addBlockTime(time):
     global totalBlockTime
     
     totalBlockTime = totalBlockTime + time
-    #totalBlockTime = 3.0
-    print("========================= total block time = " + str(totalBlockTime))
     blockTime.append(time)
