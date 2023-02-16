@@ -353,7 +353,7 @@ if __name__ == '__main__':
     
     number_of_user = NumOfFogNodes * num_of_users_per_fog_node
     number_of_TX = number_of_user * NumOfTaskPerUser
-    number_of_block = number_of_TX / numOfTXperBlock
+    number_of_block = ceil(number_of_TX / numOfTXperBlock)
     print("number of block = " + str(number_of_block))
     
     print("totalBlockTime = " + str(test_data.totalBlockTime))

@@ -90,7 +90,6 @@ class Miner:
     def receive_new_block(self, new_block, type_of_consensus, miner_list, blockchain_function, expected_chain_length): #TODO: add start timestamp
         time_start = time.time()
         #print("   ++++++++++++++++++++++++++++ ADBA start:")
-        self.downloadDataUsage += sys.getsizeof(new_block)
         
         block_already_received = False
         local_chain_temporary_file = modification.read_file(str("temporary/" + self.address + "_local_chain.json"))
@@ -117,6 +116,8 @@ class Miner:
             
             #print("   ++++++++++++++++++++++++++++ ADBE:"+str(time.time() - time_start))
             if not block_already_received:
+                self.downloadDataUsage += sys.getsizeof(new_block)
+                
                 if new_consensus_module.block_is_valid(type_of_consensus, new_block, self.top_block, self.next_pos_block_from, miner_list, self.delegates):
                     self.add(new_block, blockchain_function, expected_chain_length, miner_list)
                     
