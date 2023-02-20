@@ -31,9 +31,10 @@ class User:
                 obj.receive_tasks(self.tasks, self.addressSelf)
                 break
 
-    def __apply_first_functionality(self, num_of_task_per_user, blockchain_function):
+    def __apply_first_functionality(self, num_of_task_per_user, blockchain_function): #data management
         for task_number in range(num_of_task_per_user):
-            self.tasks.append([random.randint(0, 1000000), blockchain_function])
+            #self.tasks.append([random.randint(0, 1000000), blockchain_function])
+            self.tasks.append([random.randint(0, 1000000), random.randint(0, 1000000), random.randint(0, 1000000), random.randint(0, 1000000), blockchain_function]) # game asset trading data: old owner, new owner, item, quentity
         output.txs_success(num_of_task_per_user, self.addressParent, self.addressSelf)
 
     def __apply_second_functionality(self, num_of_task_per_user, blockchain_function):

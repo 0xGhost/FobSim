@@ -5,7 +5,6 @@ import new_consensus_module
 import output
 import encryption_module
 import modification
-import test_data
 import sys
 
 class Miner:
@@ -25,24 +24,23 @@ class Miner:
         self.uploadDataUsage = 0
         self.downloadDataUsage = 0
 
-    def build_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, expected_chain_length, AI_assisted_mining_wanted):
+    def build_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted):
         block_time = 0
         if type_of_consensus == 3 and not self.isAuthorized:
             output.unauthorized_miner_msg(self.address)
         elif type_of_consensus == 4:
             waiting_time = (self.top_block['Body']['timestamp'] + self.waiting_times[self.top_block['Header']['blockNo'] + 1]) - time.time()
             if waiting_time <= 0:
-                block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, expected_chain_length, AI_assisted_mining_wanted)
+                block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted)
         else:
             #useful code for pos, pow
-            block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, expected_chain_length, AI_assisted_mining_wanted)
-        test_data.addBlockTime(block_time)
+            block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted)
+
         return block_time
 
-    def continue_building_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, expected_chain_length, AI_assisted_mining_wanted):
+    def continue_building_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted):
         time_start = time.time()
         #print("  ++++++++++++++++++++++++++++ ADAstart:")
-        
         accumulated_transactions = new_consensus_module.accumulate_transactions(num_of_tx_per_block, mempool, blockchain_function,
                                                                                 self.address)
         other_miners_time = 0
@@ -61,8 +59,7 @@ class Miner:
             for elem in miner_list:
                 if elem.address in self.neighbours:
                     self.uploadDataUsage += sys.getsizeof(new_block)
-                    elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function,
-                                           expected_chain_length)
+                    elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function)
             time_cost_of_send = time.time() - time_before_send
             
             #print("  ++++++++++++++++++++++++++++ ADC:"+str(time.time() - time_start))
@@ -87,7 +84,7 @@ class Miner:
                 new_block['Body']['previous_hash'], self.address)
         return new_block
 
-    def receive_new_block(self, new_block, type_of_consensus, miner_list, blockchain_function, expected_chain_length): #TODO: add start timestamp
+    def receive_new_block(self, new_block, type_of_consensus, miner_list, blockchain_function): #TODO: add start timestamp
         time_start = time.time()
         #print("   ++++++++++++++++++++++++++++ ADBA start:")
         
@@ -98,7 +95,7 @@ class Miner:
         #print("   ++++++++++++++++++++++++++++ ADBB:"+str(time.time() - time_start))
         
         if condition_1:
-            self.add(new_block, blockchain_function, expected_chain_length, miner_list) # this take 0.3sec but this only run when init
+            self.add(new_block, blockchain_function, miner_list) # this take 0.3sec but this only run when init
             #print("   ++++++++++++++++++++++++++++ ADBC:"+str(time.time() - time_start))
             
         else:
@@ -119,7 +116,7 @@ class Miner:
                 self.downloadDataUsage += sys.getsizeof(new_block)
                 
                 if new_consensus_module.block_is_valid(type_of_consensus, new_block, self.top_block, self.next_pos_block_from, miner_list, self.delegates):
-                    self.add(new_block, blockchain_function, expected_chain_length, miner_list)
+                    self.add(new_block, blockchain_function, miner_list)
                     
                     #print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
                     time.sleep(self.trans_delay)
@@ -128,7 +125,7 @@ class Miner:
                     for elem in miner_list:
                         if elem.address in self.neighbours:
                             self.uploadDataUsage += sys.getsizeof(new_block)
-                            elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function, expected_chain_length)
+                            elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function)
 
                 
             #print("   ++++++++++++++++++++++++++++ ADBF end:"+str(time.time() - time_start))
@@ -157,7 +154,7 @@ class Miner:
             modification.rewrite_file(str("temporary/" + self.address + "_users_wallets.json"), user_wallets_temporary_file)
             return True
 
-    def add(self, block, blockchain_function, expected_chain_length, list_of_miners):
+    def add(self, block, blockchain_function, list_of_miners):
         ready = False
         local_chain_temporary_file = modification.read_file("temporary/" + self.address + "_local_chain.json")
         if len(local_chain_temporary_file) == 0:
