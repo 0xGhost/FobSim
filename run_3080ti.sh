@@ -25,5 +25,5 @@
 for i in {1..10}
 do
     # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus]
-    python3 main.py 1 [3080ti] 1 2 1
+    python3 main.py 1 [3080ti] 1 2 2
 done
