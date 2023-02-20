@@ -9,12 +9,14 @@ import time
 import modification
 import new_consensus_module
 import test_data
+import mempool
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
 
 isblackgun = True
 machineName = "[noname]"
+
 
 data = modification.read_file("Sim_parameters.json")
 list_of_end_users = []
@@ -42,11 +44,13 @@ poet_block_time = data['poet_block_time']
 Asymmetric_key_length = data['Asymmetric_key_length']
 number_of_DPoS_delegates = data['Num_of_DPoS_delegates']
 user_informed = False
+injectionRate = data["TX_injection_rate"] # transaction per second
+queueLimit = data["QueueTooLongLimit"]
 
 def resetSimData():
     global data, number_of_miner_neighbours, NumOfFogNodes, NumOfTaskPerUser, NumOfMiners, numOfTXperBlock, num_of_users_per_fog_node
     global expected_chain_length, gossip_activated, Automatic_PoA_miners_authorization, Parallel_PoW_mining, delay_between_fog_nodes
-    global delay_between_end_users, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates
+    global delay_between_end_users, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, injectionRate, queueLimit
     
     data = modification.read_file(machineName+"Sim_parameters.json")
     number_of_miner_neighbours = data["number_of_each_miner_neighbours"]
@@ -63,7 +67,10 @@ def resetSimData():
     delay_between_end_users = data["delay_between_end_users"]
     poet_block_time = data['poet_block_time']
     Asymmetric_key_length = data['Asymmetric_key_length']
-    number_of_DPoS_delegates = data['Num_of_DPoS_delegates']
+    number_of_DPoS_delegates = data['Num_of_DPoS_delegates'] 
+    injectionRate = data["TX_injection_rate"] #per second
+    queueLimit = data["QueueTooLongLimit"]
+    
 
 def user_input():
     modification.initiate_files(gossip_activated)
@@ -135,8 +142,8 @@ def initiate_network():
         user.create_tasks(NumOfTaskPerUser, blockchainFunction, list_of_end_users)
         user.send_tasks(fogNodes)
         print("End_user " + str(user.addressParent) + "." + str(user.addressSelf) + " had sent its tasks to the fog layer")
-
-
+    
+    
 def initiate_miners():
     the_miners_list = []
 
@@ -253,7 +260,7 @@ def initiate_genesis_block(AI_wanted):
     genesis_block = new_consensus_module.generate_new_block(genesis_transactions, 'The Network', 0, type_of_consensus, AI_wanted, False)
     output.block_info(genesis_block, type_of_consensus)
     for elem in miner_list:
-        elem.receive_new_block(genesis_block, type_of_consensus, miner_list, blockchainFunction, expected_chain_length)
+        elem.receive_new_block(genesis_block, type_of_consensus, miner_list, blockchainFunction)
     output.genesis_block_generation()
 
 
@@ -310,6 +317,16 @@ if __name__ == '__main__':
         resetSimData()
         print("[blackgun auto mode3]" + str(isblackgun)) 
     
+    if len(sys.argv) == 7:
+        isblackgun = bool(sys.argv[1])
+        machineName = sys.argv[2]
+        blockchainFunction = int(sys.argv[3])
+        blockchainPlacement = int(sys.argv[4])
+        num_of_consensus = int(sys.argv[5])
+        blockchain.setPrefix(sys.argv[2])
+        resetSimData()
+        print("[blackgun auto mode4 (with transaction injection rate)]" + str(isblackgun)) 
+    
     user_input()
     initiate_network()
     type_of_consensus = new_consensus_module.choose_consensus(isblackgun, num_of_consensus)
@@ -329,7 +346,7 @@ if __name__ == '__main__':
     
     new_consensus_module.miners_trigger(miner_list, type_of_consensus, expected_chain_length, Parallel_PoW_mining,
                                         numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length,
-                                        number_of_DPoS_delegates, AI_assisted_mining_wanted)
+                                        number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate, queueLimit)
     print("totalBlockTime = " + str(test_data.totalBlockTime))
     
     #print("++++++++++++++++++++++++++++ B:"+str(time.time() - time_start))
@@ -353,12 +370,13 @@ if __name__ == '__main__':
     
     number_of_user = NumOfFogNodes * num_of_users_per_fog_node
     number_of_TX = number_of_user * NumOfTaskPerUser
-    number_of_block = number_of_TX / numOfTXperBlock
+    #number_of_block = ceil(number_of_TX / numOfTXperBlock)
+    number_of_block = test_data.numOfBlock
     print("number of block = " + str(number_of_block))
     
     print("totalBlockTime = " + str(test_data.totalBlockTime))
     average_block_time = test_data.totalBlockTime / (float)(number_of_block)
-    average_block_time_ms = average_block_time * 1000
+    average_block_time_ms = average_block_time * 1000.0
     
     print("elapsed time = " + str(elapsed_time) + " seconds")
     print("[BG] average block time = " + str(average_block_time) + " seconds")
@@ -375,8 +393,11 @@ if __name__ == '__main__':
     with open(machineName + 'result_avrTime.txt', 'a+') as resultTimeFile:
         resultTimeFile.write(str(average_block_time)+"\n")
     
+    print("TX_injection_rate = " + str(injectionRate))
+    
     filename = machineName + 'result.xlsx'
-    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, number_of_block, delay_between_fog_nodes, delay_between_end_users, gossip_activated, averageUploadDataUsage, averageDownloadDataUsage, average_block_time_ms, elapsed_time]
+    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, gossip_activated, injectionRate, numOfTXperBlock, '/', number_of_block, test_data.queueTooLongTime, average_block_time_ms, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
+    headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'init No. tx:', 'delay between fog node(ms)', 'delay between end users(ms)', 'gossip', 'injection rate(per sec)', 'tx per block', '<-parameter / result->', 'final No. block', 'queue too long (fail) time(secs)', 'average block time(ms)', 'elapsed time(secs)', 'average upload data(bytes)', 'average download data(bytes)']
     
     # Confirm file exists. 
     # If not, create it, add headers, then append new data
@@ -384,11 +405,24 @@ if __name__ == '__main__':
         wb = load_workbook(filename)
         ws = wb.worksheets[0]  # select first worksheet
     except FileNotFoundError:
-        headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'No. tx:', 'No. block', 'delay between fog node', 'delay between end users', 'gossip', 'average upload data(bytes)', 'average download data(bytes)', 'average block time(ms)', 'elapsed time(secs)']
         wb = Workbook()
         ws = wb.active
         ws.append(headers_row)
 
     ws.append(new_row)
+
+    
+    
+    for col_num, value in enumerate(headers_row, start=1):
+        ws.cell(row=1, column=col_num, value=value)
+    
+    new_row = ws[ws.max_row]
+
+    new_row[-5].number_format = '0.000000'
+    new_row[-4].number_format = '0.000000'
+    new_row[-3].number_format = '0.000'
+    new_row[-2].number_format = '0.00'
+    new_row[-1].number_format = '0.00'
+    
     wb.save(filename)
     

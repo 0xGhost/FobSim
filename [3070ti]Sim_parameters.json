@@ -1,8 +1,8 @@
 {
   "NumOfFogNodes": 1,
-  "num_of_users_per_fog_node": 2,
-  "NumOfTaskPerUser": 10,
-  "NumOfMiners": 50,
+  "num_of_users_per_fog_node": 10,
+  "NumOfTaskPerUser": 5,
+  "NumOfMiners": 10,
   "number_of_each_miner_neighbours": 4,
   "numOfTXperBlock": 2,
   "puzzle_difficulty": 2,
@@ -17,5 +17,7 @@
   "Parallel_PoW_mining?": true,
   "Asymmetric_key_length": 512,
   "Num_of_DPoS_delegates": 2,
-  "STOR_PLC(0=in the Fog,1=in the BC)": 1
+  "STOR_PLC(0=in the Fog,1=in the BC)": 1,
+  "TX_injection_rate" : 10000.0,
+  "QueueTooLongLimit" : 100
 }
