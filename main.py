@@ -46,11 +46,14 @@ number_of_DPoS_delegates = data['Num_of_DPoS_delegates']
 user_informed = False
 injectionRate = data["TX_injection_rate"] # transaction per second
 queueLimit = data["QueueTooLongLimit"]
+uploadBandwidth = data["UploadBandwidth"] * 1024 #Bytes per second
+downloadBandwidth = data["DownloadBandwidth"] * 1024 #Bytes per second
 
 def resetSimData():
     global data, number_of_miner_neighbours, NumOfFogNodes, NumOfTaskPerUser, NumOfMiners, numOfTXperBlock, num_of_users_per_fog_node
     global expected_chain_length, gossip_activated, Automatic_PoA_miners_authorization, Parallel_PoW_mining, delay_between_fog_nodes
     global delay_between_end_users, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, injectionRate, queueLimit
+    global uploadBandwidth, downloadBandwidth
     
     data = modification.read_file(machineName+"Sim_parameters.json")
     number_of_miner_neighbours = data["number_of_each_miner_neighbours"]
@@ -70,6 +73,8 @@ def resetSimData():
     number_of_DPoS_delegates = data['Num_of_DPoS_delegates'] 
     injectionRate = data["TX_injection_rate"] #per second
     queueLimit = data["QueueTooLongLimit"]
+    uploadBandwidth = data["UploadBandwidth"] * 1024
+    downloadBandwidth = data["DownloadBandwidth"] * 1024
     
 
 def user_input():
@@ -149,10 +154,10 @@ def initiate_miners():
 
     if blockchainPlacement == 1:
         for i in range(NumOfFogNodes):
-            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated))
+            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth))
     if blockchainPlacement == 2:
         for i in range(NumOfMiners):
-            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated))
+            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth))
     for entity in the_miners_list:
         modification.write_file("temporary/" + entity.address + "_local_chain.json", {})
         miner_wallets_log_py = modification.read_file("temporary/miner_wallets_log.json")
@@ -396,8 +401,8 @@ if __name__ == '__main__':
     print("TX_injection_rate = " + str(injectionRate))
     
     filename = machineName + 'result.xlsx'
-    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, gossip_activated, injectionRate, numOfTXperBlock, '/', number_of_block, test_data.queueTooLongTime, average_block_time_ms, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
-    headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'init No. tx:', 'delay between fog node(ms)', 'delay between end users(ms)', 'gossip', 'injection rate(per sec)', 'tx per block', '<-parameter / result->', 'final No. block', 'queue too long (fail) time(secs)', 'average block time(ms)', 'elapsed time(secs)', 'average upload data(bytes)', 'average download data(bytes)']
+    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, gossip_activated, injectionRate, numOfTXperBlock, '/', number_of_block, test_data.queueTooLongTime, average_block_time_ms, test_data.totalBlockTime, test_data.totalBlockPrepareTime, test_data.totalUploadTime, test_data.totalDownloadTime, test_data.totalNetworkDelayTime, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
+    headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'init No. tx:', 'delay between fog node(ms)', 'delay between end users(ms)', 'gossip', 'injection rate(per sec)', 'tx per block', '<-parameter / result->', 'final No. block', 'queue too long (fail) time(secs)', 'average block time(ms)', 'simulation time(sec)', 'total prepare time(sec)', 'total upload time(sec)', 'total download time(sec)', 'total network delay time(sec)', 'elapsed time(secs)', 'average upload data(bytes)', 'average download data(bytes)']
     
     # Confirm file exists. 
     # If not, create it, add headers, then append new data
@@ -411,13 +416,18 @@ if __name__ == '__main__':
 
     ws.append(new_row)
 
-    
+
     
     for col_num, value in enumerate(headers_row, start=1):
         ws.cell(row=1, column=col_num, value=value)
     
     new_row = ws[ws.max_row]
 
+    new_row[-10].number_format = '0.000000'
+    new_row[-9].number_format = '0.000000'
+    new_row[-8].number_format = '0.000000'
+    new_row[-7].number_format = '0.000000'
+    new_row[-6].number_format = '0.000000'
     new_row[-5].number_format = '0.000000'
     new_row[-4].number_format = '0.000000'
     new_row[-3].number_format = '0.000'

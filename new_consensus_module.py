@@ -145,6 +145,8 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             simulation_time += block_time
             test_data.addBlockTime(block_time)
             numOfBlock+=1
+            test_data.totalBlockPrepareTime += prepare_time
+            test_data.totalBlockGenerationTime += build_block_time
             print("====================== block time = " + str(block_time))
             
         #print(" ++++++++++++++++++++++++++++ AE:"+str(time.time() - start_time))

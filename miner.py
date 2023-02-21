@@ -6,9 +6,10 @@ import output
 import encryption_module
 import modification
 import sys
+import test_data
 
 class Miner:
-    def __init__(self, address, trans_delay, gossiping):
+    def __init__(self, address, trans_delay, gossiping, uploadBandwidth = 0, downloadBandwidth = 0):
         self.address = "Miner_" + str(address)
         self.top_block = {}
         self.isAuthorized = False
@@ -23,8 +24,11 @@ class Miner:
         self.adversary = False
         self.uploadDataUsage = 0
         self.downloadDataUsage = 0
+        self.uploadBandwidth = uploadBandwidth
+        self.downloadBandwidth = downloadBandwidth
 
     def build_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted):
+        #print("uploadBandwidth : " + str(self.uploadBandwidth))
         block_time = 0
         if type_of_consensus == 3 and not self.isAuthorized:
             output.unauthorized_miner_msg(self.address)
@@ -50,22 +54,30 @@ class Miner:
             output.block_info(new_block, type_of_consensus)
             
             #print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
-            time.sleep(self.trans_delay)
+            #time.sleep(self.trans_delay)
             #print("miner wake up")
             
             #print("  ++++++++++++++++++++++++++++ ADB:"+str(time.time() - time_start))
             
             time_before_send = time.time()
+            upload_time = 0
+            download_time = 0
             for elem in miner_list:
                 if elem.address in self.neighbours:
-                    self.uploadDataUsage += sys.getsizeof(new_block)
+                    blockSize = sys.getsizeof(new_block)
+                    self.uploadDataUsage += blockSize
+                    upload_time += blockSize / (float)(self.uploadBandwidth)
+                    download_time += blockSize / (float)(self.downloadBandwidth)
                     elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function)
             time_cost_of_send = time.time() - time_before_send
-            
+            print("+++++++++++++++++++++++++ uploadtime = " + str(upload_time))
             #print("  ++++++++++++++++++++++++++++ ADC:"+str(time.time() - time_start))
         #print("  ++++++++++++++++++++++++++++ ADEend:"+str(time.time() - time_start))
-        
-        time_cost = time.time() - time_start - time_cost_of_send
+    
+        time_cost = time.time() - time_start - time_cost_of_send + upload_time + self.trans_delay + download_time
+        test_data.totalDownloadTime += download_time
+        test_data.totalUploadTime += upload_time
+        test_data.totalNetworkDelayTime += self.trans_delay
         #print("============================  build_time_cost = "+str(time_cost) + " , send_time_cost = " + str(time_cost_of_send))
         
         return time_cost
@@ -85,7 +97,7 @@ class Miner:
         return new_block
 
     def receive_new_block(self, new_block, type_of_consensus, miner_list, blockchain_function): #TODO: add start timestamp
-        time_start = time.time()
+
         #print("   ++++++++++++++++++++++++++++ ADBA start:")
         
         block_already_received = False
@@ -119,7 +131,7 @@ class Miner:
                     self.add(new_block, blockchain_function, miner_list)
                     
                     #print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
-                    time.sleep(self.trans_delay)
+                    #time.sleep(self.trans_delay)
                     #print("miner wake up")
                     
                     for elem in miner_list:
