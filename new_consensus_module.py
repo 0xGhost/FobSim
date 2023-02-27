@@ -98,8 +98,8 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
         injectionTime = 1 / injectionRate
         print("///////////////////////////////injection time gap = " + str(injectionTime))
     
-    #for counter in range(expected_chain_length): #TODO: change condition related to mempool size
-    while mempool.MemPool.qsize() > 0: #TODO: change condition related to mempool size
+    #for counter in range(expected_chain_length): 
+    while mempool.MemPool.qsize() > 0: 
         #TODO: check injection transactions
         if injectionRate > 0:
             while transaction_remain_time > injectionTime:
