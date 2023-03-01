@@ -312,7 +312,7 @@ if __name__ == '__main__':
         num_of_consensus = int(sys.argv[4])
         print("[blackgun auto mode2]" + str(isblackgun)) 
         
-    if len(sys.argv) == 6:
+    if len(sys.argv) >= 6:
         isblackgun = bool(sys.argv[1])
         machineName = sys.argv[2]
         blockchainFunction = int(sys.argv[3])
@@ -321,16 +321,12 @@ if __name__ == '__main__':
         blockchain.setPrefix(sys.argv[2])
         resetSimData()
         print("[blackgun auto mode3]" + str(isblackgun)) 
+        if len(sys.argv) > 6:
+            numOfTXperBlock = int(sys.argv[6])
+            injectionRate = int (sys.argv[7])
+            print("[blackgun auto mode3+] overwrite: " + "tx per block = " + str(numOfTXperBlock) + ", injection rate = " + str(injectionRate))
     
-    if len(sys.argv) == 7:
-        isblackgun = bool(sys.argv[1])
-        machineName = sys.argv[2]
-        blockchainFunction = int(sys.argv[3])
-        blockchainPlacement = int(sys.argv[4])
-        num_of_consensus = int(sys.argv[5])
-        blockchain.setPrefix(sys.argv[2])
-        resetSimData()
-        print("[blackgun auto mode4 (with transaction injection rate)]" + str(isblackgun)) 
+
     
     user_input()
     initiate_network()
