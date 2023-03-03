@@ -29,9 +29,11 @@ injectionRate=(2 4 8 16 32 64 128 256 512 1024)
 
 for k in "${txPerBlock[@]}" # k: tx per block
 do
-    for j in "${injectionRate[@]}" # j: injection rate
+    for i in {1..10} # runs
+    #for j in "${injectionRate[@]}" # j: injection rate
     do
-        for i in {1..5} # runs
+        for j in "${injectionRate[@]}" # j: injection rate
+        #for i in {1..5} # runs
         do
             # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus] [tx per block] [injection rate]
             python3 main.py 1 [3080ti] 1 2 2 "$k" "$j"
