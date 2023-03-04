@@ -25,7 +25,7 @@
 txPerBlock=(2)
 #txPerBlock=(2 4)
 #txPerBlock=(2 4 8 16 32)
-injectionRate=(32)
+injectionRate=(256)
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024)
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384)
 
