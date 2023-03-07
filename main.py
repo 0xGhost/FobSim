@@ -380,7 +380,7 @@ if __name__ == '__main__':
     average_block_time_ms = average_block_time * 1000.0
     
     print("elapsed time = " + str(elapsed_time) + " seconds")
-    print("[BG] average block time = " + str(average_block_time) + " seconds")
+    print("[BG] average block time = " + str(average_block_time_ms) + " ms")
     with open(machineName + 'result_log.txt', 'a+') as resultfile:
         resultfile.write("No. user: " + str(number_of_user))
         resultfile.write(" , No. miner: " + str(NumOfMiners))

@@ -108,7 +108,6 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
                 mempool.MemPool.put(mempool.getRandomTransaction(simulation_time))
                 print("//////////////////////////////////remain time = " + str(transaction_remain_time) + ", add a tx to queue")
             
-        start_time = time.time()
         print("----------------------------------mempool queue size: " + str(mempool.MemPool.qsize()))
         if queueLimit > 0 and queueLimit < mempool.MemPool.qsize():
             print("queue too long, limit: " + str(queueLimit))
@@ -116,15 +115,20 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             test_data.numOfBlock = numOfBlock
             return
         
-        #print(" ++++++++++++++++++++++++++++ AB:"+str(time.time() - start_time))
+        temp_file_py = modification.read_file('temporary/miners_stake_amounts.json')
+        
+        start_time = time.time()
+        
         randomly_chosen_miners = []
         x = int(round((len(the_miners_list) / 2), 0))
         for i in range(x):
             randomly_chosen_miners.append(random.choice(the_miners_list))
+            
+        print(" ++++++++++++++++++++++++++++ AB:"+str(time.time() - start_time))
+            
         biggest_stake = 0
         final_chosen_miner = the_miners_list[0]
-        temp_file_py = modification.read_file('temporary/miners_stake_amounts.json')
-        #print(" ++++++++++++++++++++++++++++ AC:"+str(time.time() - start_time))
+        print(" ++++++++++++++++++++++++++++ AC:"+str(time.time() - start_time))
         
         for chosen_miner in randomly_chosen_miners:
             stake = temp_file_py[chosen_miner.address]
@@ -133,7 +137,8 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
                 final_chosen_miner = chosen_miner
         for entity in the_miners_list:
             entity.next_pos_block_from = final_chosen_miner.address
-        #print(" ++++++++++++++++++++++++++++ AD:"+str(time.time() - start_time))
+        print(" ++++++++++++++++++++++++++++ AD:"+str(time.time() - start_time))
+        #prepare_time = 0
         prepare_time = time.time() - start_time
         #simulation_time += prepare_time
         if mempool.MemPool.qsize() != 0:
