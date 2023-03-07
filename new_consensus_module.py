@@ -105,7 +105,7 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             while transaction_remain_time > injectionTime:
                 transaction_remain_time -= injectionTime
                 #TODO: add injection tx to queue
-                mempool.MemPool.put(mempool.getRandomTransaction())
+                mempool.MemPool.put(mempool.getRandomTransaction(simulation_time))
                 print("//////////////////////////////////remain time = " + str(transaction_remain_time) + ", add a tx to queue")
             
         start_time = time.time()

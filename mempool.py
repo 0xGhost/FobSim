@@ -7,8 +7,10 @@ index = 0
 
 transactionList = [] # simluate injection transactions
 
-def getRandomTransaction():
-    return random.choice(transactionList)
+def getRandomTransaction(timestamp = 0.0):
+    temp = random.choice(transactionList)
+    temp[0] = timestamp
+    return temp
 
 def copyQueueToTransactionList():
     global transactionList
