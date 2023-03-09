@@ -20,6 +20,6 @@
   "STOR_PLC(0=in the Fog,1=in the BC)": 1,
   "TX_injection_rate" : 16384.0,
   "QueueTooLongLimit" : 100,
-  "UploadBandwidth" : 1000, "_2" : "KB per second",
-  "DownloadBandwidth" : 2000
+  "UploadBandwidth" : 100, "_2" : "KB per second",
+  "DownloadBandwidth" : 200
 }
