@@ -22,22 +22,22 @@
 # 5: Delegated Proof of Stake (DPoS)
 # 6: Example New CA
 
-#txPerBlock=(5 10)
-txPerBlock=(5 10 15 20 25 30)
+txPerBlock=(5 10)
+#txPerBlock=(5 10 15 20 25 30)
 #txPerBlock=(2 4)
 #txPerBlock=(2 4 8 16 32)
 #injectionRate=(256)
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024)
 #injectionRate=(256 512 1024 2048 4096 8192 16384)
-injectionRate=(256 512 1024 2048 4096 8192 16384)
+injectionRate=(256 288 320 352 384 416 448 480 512)
 
 for k in "${txPerBlock[@]}" # k: tx per block
 do
-    for i in {1..10} # runs
-    #for j in "${injectionRate[@]}" # j: injection rate
+    #for i in {1..10} # runs
+    for j in "${injectionRate[@]}" # j: injection rate
     do
-        for j in "${injectionRate[@]}" # j: injection rate
-        #for i in {1..5} # runs
+        #for j in "${injectionRate[@]}" # j: injection rate
+        for i in {1..10} # runs
         do
             # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus] [tx per block] [injection rate]
             python3 main.py 1 [3080ti] 1 2 2 "$k" "$j"
