@@ -22,13 +22,14 @@
 # 5: Delegated Proof of Stake (DPoS)
 # 6: Example New CA
 
-txPerBlock=(5 10)
+txPerBlock=(5)
 #txPerBlock=(5 10 15 20 25 30)
 #txPerBlock=(2 4)
 #txPerBlock=(2 4 8 16 32)
 
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024)
-injectionRate=(256 512 1024 2048 4096 8192)
+#injectionRate=(128 256 512 1024 2048 4096 8192 16384 32768)
+injectionRate=(256 288 320 352 384 416 448 480 512)
 
 for k in "${txPerBlock[@]}" # k: tx per block
 do
