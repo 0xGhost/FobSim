@@ -1,7 +1,8 @@
 blockTime = []
 totalBlockTime = 0 # totalBlockTime = totalBlockGenerationTime + totalBlockPrepareTime
 numOfBlock = 0
-queueTooLongTime = -1.0
+failTime = -1.0
+queueTooLongTime = -2.0
 
 totalUploadTime = 0
 totalDownloadTime = 0

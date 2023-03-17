@@ -16,4 +16,19 @@ def copyQueueToTransactionList():
     global transactionList
     while not MemPool.empty():
         transactionList.append(MemPool.get())
+    for tx in transactionList:
+        #print(tx)
+        MemPool.put(tx)
         
+def getOldestTimeStamp():
+    
+     return peek_queue(MemPool)[0]
+
+def peek_queue(queue):
+    txs = []
+    for i in range(queue.qsize()):
+        txs.append(queue.get())
+    for tx in txs:
+        queue.put(tx)
+    
+    return txs[0]

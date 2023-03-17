@@ -86,8 +86,7 @@ def trigger_pow_miners(the_miners_list, the_type_of_consensus, expected_chain_le
 
 
 def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock,
-                       blockchainFunction, injectionRate = 0, queueLimit = 0):
-
+                       blockchainFunction, injectionRate = 0, queueLimit = -1, failPendingTime = -1.0):
     
     simulation_time = 0
     transaction_remain_time = 0
@@ -100,18 +99,27 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
     
     #for counter in range(expected_chain_length): 
     while mempool.MemPool.qsize() > 0: 
-        #TODO: check injection transactions
         if injectionRate > 0:
             while transaction_remain_time > injectionTime:
                 transaction_remain_time -= injectionTime
-                #TODO: add injection tx to queue
                 mempool.MemPool.put(mempool.getRandomTransaction(simulation_time))
                 print("//////////////////////////////////remain time = " + str(transaction_remain_time) + ", add a tx to queue")
             
         print("----------------------------------mempool queue size: " + str(mempool.MemPool.qsize()))
+    
+        
+        oldestTransactionTimestamp = mempool.getOldestTimeStamp()
+        print("tx oldest time stamp: " + str(oldestTransactionTimestamp) + ", sim time: " + str(simulation_time) + ", failPendingTime: " + str(failPendingTime))
+        longestPendingTime = simulation_time - oldestTransactionTimestamp
+        if failPendingTime > 0 and longestPendingTime > failPendingTime:
+            print("pending time failed: " + str(longestPendingTime))
+            test_data.numOfBlock = numOfBlock
+            test_data.failTime = simulation_time
+            return
+            
         if queueLimit > 0 and queueLimit < mempool.MemPool.qsize():
             print("queue too long, limit: " + str(queueLimit))
-            test_data.queueTooLongTime = simulation_time
+            test_data.failTime = simulation_time
             test_data.numOfBlock = numOfBlock
             return
         
@@ -123,12 +131,9 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
         x = int(round((len(the_miners_list) / 2), 0))
         for i in range(x):
             randomly_chosen_miners.append(random.choice(the_miners_list))
-            
-        print(" ++++++++++++++++++++++++++++ AB:"+str(time.time() - start_time))
-            
+        
         biggest_stake = 0
         final_chosen_miner = the_miners_list[0]
-        print(" ++++++++++++++++++++++++++++ AC:"+str(time.time() - start_time))
         
         for chosen_miner in randomly_chosen_miners:
             stake = temp_file_py[chosen_miner.address]
@@ -137,7 +142,7 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
                 final_chosen_miner = chosen_miner
         for entity in the_miners_list:
             entity.next_pos_block_from = final_chosen_miner.address
-        print(" ++++++++++++++++++++++++++++ AD:"+str(time.time() - start_time))
+
         #prepare_time = 0
         prepare_time = time.time() - start_time
         #simulation_time += prepare_time
@@ -421,20 +426,18 @@ def generate_new_block(transactions, generator_id, previous_hash, type_of_consen
 # add an IF statement to this function so that the simulator would know the trigger reference:
 
 
-def miners_trigger(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate = 0, queueLimit = 0):
+def miners_trigger(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate = 0, queueLimit = -1, failPendingTime = -4.0):
     output.mempool_info(mempool.MemPool)
     
     if injectionRate > 0:
         mempool.copyQueueToTransactionList()
         #print("/////////////////////////////////in transaction list:")
-        for tx in mempool.transactionList:
-            #print(tx)
-            mempool.MemPool.put(tx)
+
             
     if the_type_of_consensus == 1:
         trigger_pow_miners(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, AI_assisted_mining_wanted)
     if the_type_of_consensus == 2:
-        trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock, blockchainFunction, injectionRate, queueLimit)
+        trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock, blockchainFunction, injectionRate, queueLimit, failPendingTime)
     if the_type_of_consensus == 3:
         trigger_poa_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock, blockchainFunction)
     if the_type_of_consensus == 4:

@@ -19,7 +19,8 @@
   "Num_of_DPoS_delegates": 2,
   "STOR_PLC(0=in the Fog,1=in the BC)": 1,
   "TX_injection_rate" : 2.0, "_3" : "tx per second",
-  "QueueTooLongLimit" : 100,
+  "QueueTooLongLimit" : -3,
+  "FailPendingTime" : 0.2, "_4" : "seond",
   "UploadBandwidth" : 100, "_2" : "KB per second",
   "DownloadBandwidth" : 200
 }
