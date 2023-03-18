@@ -422,6 +422,7 @@ if __name__ == '__main__':
     
     new_row = ws[ws.max_row]
 
+    new_row[-11].number_format = '0.000000'
     new_row[-10].number_format = '0.000000'
     new_row[-9].number_format = '0.000000'
     new_row[-8].number_format = '0.000000'
