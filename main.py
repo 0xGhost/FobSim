@@ -380,6 +380,7 @@ if __name__ == '__main__':
     print("totalBlockTime = " + str(test_data.totalBlockTime))
     average_block_time = test_data.totalBlockTime / (float)(number_of_block)
     average_block_time_ms = average_block_time * 1000.0
+    average_transaction_pending_time_ms = test_data.totalTXPendingTime / (float)(test_data.totalTXNum) * 1000.0
     
     print("elapsed time = " + str(elapsed_time) + " seconds")
     print("[BG] average block time = " + str(average_block_time_ms) + " ms")
@@ -399,8 +400,8 @@ if __name__ == '__main__':
     print("TX_injection_rate = " + str(injectionRate))
     
     filename = machineName + 'result.xlsx'
-    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, uploadBandwidth / 1024, downloadBandwidth / 1024, gossip_activated, injectionRate, numOfTXperBlock, '<-parameter / result->', number_of_block, test_data.failTime, average_block_time_ms, test_data.totalBlockTime, test_data.totalBlockPrepareTime, test_data.totalUploadTime, test_data.totalDownloadTime, test_data.totalNetworkDelayTime, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
-    headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'init No. tx:', 'delay between fog node(ms)', 'delay between end users(ms)', 'upload bandwidth(KB/S)', 'download bandwidth(KB/S)', 'gossip', 'injection rate(per sec)', 'tx per block', '<-parameter / result->', 'final No. block', 'fail time(secs)', 'average block time(ms)', 'simulation time(sec)', 'total prepare time(sec)', 'total upload time(sec)', 'total download time(sec)', 'total network delay time(sec)', 'elapsed time(secs)', 'average upload data(bytes)', 'average download data(bytes)']
+    new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, uploadBandwidth / 1024, downloadBandwidth / 1024, gossip_activated, injectionRate, numOfTXperBlock, '<-parameter / result->', number_of_block, test_data.failTime, average_transaction_pending_time_ms, average_block_time_ms, test_data.totalBlockTime, test_data.totalBlockPrepareTime, test_data.totalUploadTime, test_data.totalDownloadTime, test_data.totalNetworkDelayTime, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
+    headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'init No. tx:', 'delay between fog node(ms)', 'delay between end users(ms)', 'upload bandwidth(KB/S)', 'download bandwidth(KB/S)', 'gossip', 'injection rate(per sec)', 'tx per block', '<-parameter / result->', 'final No. block', 'fail time(secs)', 'average transaction pending time(ms)', 'average block time(ms)', 'simulation time(sec)', 'total prepare time(sec)', 'total upload time(sec)', 'total download time(sec)', 'total network delay time(sec)', 'elapsed time(secs)', 'average upload data(bytes)', 'average download data(bytes)']
     
     # Confirm file exists. 
     # If not, create it, add headers, then append new data

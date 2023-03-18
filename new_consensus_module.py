@@ -39,6 +39,7 @@ def choose_consensus(isblackgun, num = 2):   #PoS
 
 
 def accumulate_transactions(num_of_tx_per_block, this_mem_pool, blockchain_function, miner_address):
+    
     lst_of_transactions = []
     if blockchain_function == 2:
         if this_mem_pool.qsize() > 0:
@@ -61,6 +62,7 @@ def accumulate_transactions(num_of_tx_per_block, this_mem_pool, blockchain_funct
             else:
                 output.mempool_is_empty()
                 break
+    test_data.addTransactionsStartTime(lst_of_transactions)
     return lst_of_transactions
 
 
@@ -157,6 +159,7 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             numOfBlock+=1
             test_data.totalBlockPrepareTime += prepare_time
             test_data.totalBlockGenerationTime += build_block_time
+            test_data.addPendingTime(simulation_time)
             print("====================== block time = " + str(block_time))
             
         #print(" ++++++++++++++++++++++++++++ AE:"+str(time.time() - start_time))
