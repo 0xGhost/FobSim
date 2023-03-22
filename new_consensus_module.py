@@ -90,6 +90,7 @@ def trigger_pow_miners(the_miners_list, the_type_of_consensus, expected_chain_le
 def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock,
                        blockchainFunction, injectionRate = 0, queueLimit = -1, failPendingTime = -1.0):
     
+    queueEmptyCounter = 0
     simulation_time = 0
     transaction_remain_time = 0
     injectionTime = 0
@@ -97,9 +98,10 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
     #print(" ++++++++++++++++++++++++++++ AAstart")
     if injectionRate > 0: 
         injectionTime = 1 / injectionRate
-        print("///////////////////////////////injection time gap = " + str(injectionTime))
+        #print("injection time gap = " + str(injectionTime))
     
     #for counter in range(expected_chain_length): 
+    #while mempool.MemPool.qsize() > 0: 
     while mempool.MemPool.qsize() > 0: 
         if injectionRate > 0:
             while transaction_remain_time > injectionTime:
@@ -108,8 +110,7 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
                 print("//////////////////////////////////remain time = " + str(transaction_remain_time) + ", add a tx to queue")
             
         print("----------------------------------mempool queue size: " + str(mempool.MemPool.qsize()))
-    
-        
+
         oldestTransactionTimestamp = mempool.getOldestTimeStamp()
         print("tx oldest time stamp: " + str(oldestTransactionTimestamp) + ", sim time: " + str(simulation_time) + ", failPendingTime: " + str(failPendingTime))
         longestPendingTime = simulation_time - oldestTransactionTimestamp
