@@ -29,7 +29,7 @@ txPerBlock=(128 256 512 1024 2048 4096 8192)
 #injectionRate=(256)
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024)
 #injectionRate=(256 512 1024 2048 4096 8192 16384 32768)
-injectionRate=(256 1024 4096 16384)
+injectionRate=(16)
 
 
 for k in "${txPerBlock[@]}" # k: tx per block
