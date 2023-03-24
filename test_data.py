@@ -21,7 +21,7 @@ def addTransactionsStartTime(txs):
     TXNumOfThisBlock = len(txs)
     totalTXNum += TXNumOfThisBlock
     for tx in txs:
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@ tx[0]: " + str(tx[0]))
+        #print("@@@@@@@@@@@@@@@@@@@@@@@@@@@ tx[0]: " + str(tx[0]))
         
         TXStartTimeSumPerBlock += float(tx[0])
 
