@@ -36,8 +36,8 @@ txPerBlock=(5   10  15  20  25  30  35  40  45)
 #txPerBlock=(5   10)
 
 #               1    2    3    4    5    6    7    8    9
-injectionRate1=(256  512  704  1088 1280 1408 1792 2176 2176) 
-injectionRate3=(288  576  768  1152 1408 1536 1920 2304 2304)
+injectionRate1=(248  480  750  970 1260 1461 1750 2035 2300) 
+injectionRate3=(256  488  753  980 1270 1472 1800 2050 2500)
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
 #injectionRate3=(288  640   128  256  512  1024 2048 4096 8192)
@@ -49,18 +49,18 @@ runs=10
 txPerBlock_length=${#txPerBlock[@]}
 for ((i = 0; i < txPerBlock_length; i++))
 do
-    for j in {1..runs} 
+    for j in {1..10} 
     do
         python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "${injectionRate1[$i]}"
     done
 
-    for j in {1..runs} 
+    for j in {1..10} 
     do
         injectionRateM=$(((${injectionRate1[$i]} + ${injectionRate3[$i]}) / 2))
         python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "$injectionRateM"
     done
 
-    for j in {1..runs} 
+    for j in {1..10} 
     do
         python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "${injectionRate3[$i]}"
     done
