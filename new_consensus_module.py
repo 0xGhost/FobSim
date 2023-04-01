@@ -88,7 +88,7 @@ def trigger_pow_miners(the_miners_list, the_type_of_consensus, expected_chain_le
 
 
 def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock,
-                       blockchainFunction, injectionRate = 0, queueLimit = -1, failPendingTime = -1.0):
+                       blockchainFunction, injectionRate = 0, queueLimit = -1, failPendingTime = -1.0, fastPoS = False):
     
     queueEmptyCounter = 0
     simulation_time = 0
@@ -146,12 +146,15 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
         for entity in the_miners_list:
             entity.next_pos_block_from = final_chosen_miner.address
 
+        if fastPoS:
+            final_chosen_miner = the_miners_list[0]
+            
         #prepare_time = 0
         prepare_time = time.time() - start_time
         #simulation_time += prepare_time
         if mempool.MemPool.qsize() != 0:
             build_block_time = final_chosen_miner.build_block(numOfTXperBlock, mempool.MemPool, the_miners_list, the_type_of_consensus,
-                                           blockchainFunction, None)
+                                           blockchainFunction, None, fastPoS)
             #simulation_time += build_block_time
             block_time = build_block_time + prepare_time
             transaction_remain_time += block_time
@@ -430,7 +433,7 @@ def generate_new_block(transactions, generator_id, previous_hash, type_of_consen
 # add an IF statement to this function so that the simulator would know the trigger reference:
 
 
-def miners_trigger(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate = 0, queueLimit = -1, failPendingTime = -4.0):
+def miners_trigger(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate = 0, queueLimit = -1, failPendingTime = -4.0, fastPoS = False):
     output.mempool_info(mempool.MemPool)
     
     if injectionRate > 0:
@@ -441,7 +444,7 @@ def miners_trigger(the_miners_list, the_type_of_consensus, expected_chain_length
     if the_type_of_consensus == 1:
         trigger_pow_miners(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, AI_assisted_mining_wanted)
     if the_type_of_consensus == 2:
-        trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock, blockchainFunction, injectionRate, queueLimit, failPendingTime)
+        trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock, blockchainFunction, injectionRate, queueLimit, failPendingTime, fastPoS)
     if the_type_of_consensus == 3:
         trigger_poa_miners(the_miners_list, the_type_of_consensus, expected_chain_length, numOfTXperBlock, blockchainFunction)
     if the_type_of_consensus == 4:

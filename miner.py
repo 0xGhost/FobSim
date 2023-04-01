@@ -27,7 +27,7 @@ class Miner:
         self.uploadBandwidth = uploadBandwidth
         self.downloadBandwidth = downloadBandwidth
 
-    def build_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted):
+    def build_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted, fastPoS = False):
         #print("uploadBandwidth : " + str(self.uploadBandwidth))
         block_time = 0
         if type_of_consensus == 3 and not self.isAuthorized:
@@ -38,11 +38,11 @@ class Miner:
                 block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted)
         else:
             #useful code for pos, pow
-            block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted)
+            block_time = self.continue_building_block(num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted, fastPoS)
 
         return block_time
 
-    def continue_building_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted):
+    def continue_building_block(self, num_of_tx_per_block, mempool, miner_list, type_of_consensus, blockchain_function, AI_assisted_mining_wanted, fastPoS = False):
         time_start = time.time()
         #print("  ++++++++++++++++++++++++++++ ADAstart:")
         accumulated_transactions = new_consensus_module.accumulate_transactions(num_of_tx_per_block, mempool, blockchain_function,
@@ -68,7 +68,8 @@ class Miner:
                     self.uploadDataUsage += blockSize
                     upload_time += blockSize / (float)(self.uploadBandwidth)
                     download_time += blockSize / (float)(self.downloadBandwidth)
-                    elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function)
+                    if not fastPoS:
+                        elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function)
             time_cost_of_send = time.time() - time_before_send
             print("+++++++++++++++++++++++++ uploadtime = " + str(upload_time))
             #print("  ++++++++++++++++++++++++++++ ADC:"+str(time.time() - time_start))

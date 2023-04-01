@@ -49,12 +49,13 @@ queueLimit = data["QueueTooLongLimit"]
 failPendingTime = data["FailPendingTime"]
 uploadBandwidth = data["UploadBandwidth"] * 1024 #Bytes per second
 downloadBandwidth = data["DownloadBandwidth"] * 1024 #Bytes per second
+fastPoS = data["FastPoS"]
 
 def resetSimData():
     global data, number_of_miner_neighbours, NumOfFogNodes, NumOfTaskPerUser, NumOfMiners, numOfTXperBlock, num_of_users_per_fog_node
     global expected_chain_length, gossip_activated, Automatic_PoA_miners_authorization, Parallel_PoW_mining, delay_between_fog_nodes
     global delay_between_end_users, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, injectionRate, queueLimit
-    global uploadBandwidth, downloadBandwidth, failPendingTime
+    global uploadBandwidth, downloadBandwidth, failPendingTime, fastPoS
     
     data = modification.read_file(machineName+"Sim_parameters.json")
     number_of_miner_neighbours = data["number_of_each_miner_neighbours"]
@@ -77,6 +78,8 @@ def resetSimData():
     failPendingTime = data["FailPendingTime"]
     uploadBandwidth = data["UploadBandwidth"] * 1024
     downloadBandwidth = data["DownloadBandwidth"] * 1024
+    fastPoS = data["FastPoS"]
+    
     
 
 def user_input():
@@ -349,7 +352,7 @@ if __name__ == '__main__':
     
     new_consensus_module.miners_trigger(miner_list, type_of_consensus, expected_chain_length, Parallel_PoW_mining,
                                         numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length,
-                                        number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate, queueLimit, failPendingTime)
+                                        number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate, queueLimit, failPendingTime, fastPoS)
     print("totalBlockTime = " + str(test_data.totalBlockTime))
     
     #print("++++++++++++++++++++++++++++ B:"+str(time.time() - time_start))

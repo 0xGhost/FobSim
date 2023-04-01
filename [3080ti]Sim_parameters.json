@@ -22,5 +22,6 @@
   "QueueTooLongLimit" : 100,
   "FailPendingTime" : -2, "_4" : "seond",
   "UploadBandwidth" : 100, "_2" : "KB per second",
-  "DownloadBandwidth" : 200
+  "DownloadBandwidth" : 200,
+  "FastPoS" : true
 }
