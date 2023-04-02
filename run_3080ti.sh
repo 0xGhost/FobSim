@@ -36,35 +36,52 @@ txPerBlock=(5   10  15  20  25  30  35  40  45)
 #txPerBlock=(5   10)
 
 #               1    2    3    4    5    6    7    8    9
-injectionRate1=(248  480  750  970 1260 1461 1750 2035 2300) 
-injectionRate3=(256  488  753  980 1270 1472 1800 2050 2500)
+injectionRate1=(240  480  700  950  1260 1400 1700 2000 2200) 
+injectionRate3=(300  640  800  1200 1400 1600 2000 2300 2700)
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
 #injectionRate3=(288  640   128  256  512  1024 2048 4096 8192)
 
 
-
-runs=10
+#     1 2 3 4 5 6 7 8 9
+step=(2 2 2 2 2 4 4 4 4)
 
 txPerBlock_length=${#txPerBlock[@]}
+
 for ((i = 0; i < txPerBlock_length; i++))
 do
-    for j in {1..10} 
+    for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
     do
-        python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "${injectionRate1[$i]}"
-    done
-
-    for j in {1..10} 
-    do
-        injectionRateM=$(((${injectionRate1[$i]} + ${injectionRate3[$i]}) / 2))
-        python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "$injectionRateM"
-    done
-
-    for j in {1..10} 
-    do
-        python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "${injectionRate3[$i]}"
+        for k in {1..20} # runs
+        do
+            # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus] [tx per block] [injection rate]
+            python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "$j"
+        done
     done
 done
+
+
+# runs=10
+
+# txPerBlock_length=${#txPerBlock[@]}
+# for ((i = 0; i < txPerBlock_length; i++))
+# do
+#     for j in {1..10} 
+#     do
+#         python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "${injectionRate1[$i]}"
+#     done
+
+#     for j in {1..10} 
+#     do
+#         injectionRateM=$(((${injectionRate1[$i]} + ${injectionRate3[$i]}) / 2))
+#         python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "$injectionRateM"
+#     done
+
+#     for j in {1..10} 
+#     do
+#         python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "${injectionRate3[$i]}"
+#     done
+# done
 
 # for k in "${txPerBlock[@]}" # k: tx per block
 # do
