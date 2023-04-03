@@ -3,7 +3,7 @@ import os
 import random
 import output
 import modification
-
+import time
 
 file_prefix = ""
 data = modification.read_file(file_prefix + "Sim_parameters.json")
@@ -69,15 +69,27 @@ def generator_is_adversary(generator, list_of_miners):
             print(e)
 
 
-def stake(list_of_miners, num_of_consensus):
+def stake(list_of_miners, num_of_consensus, realTimeStart = 0.0):
     if num_of_consensus == 2:
         for miner in list_of_miners:
-            temp_miner_wallets_log_py = modification.read_file('temporary/miner_wallets_log.json')
-            temp_miners_stake_amounts_py = modification.read_file('temporary/miners_stake_amounts.json')
-            temp_miners_stake_amounts_py[miner.address] = random.randint(0, temp_miner_wallets_log_py[miner.address])
-            temp_miner_wallets_log_py[miner.address] -= temp_miners_stake_amounts_py[miner.address]
-            modification.rewrite_file('temporary/miner_wallets_log.json', temp_miner_wallets_log_py)
-            modification.rewrite_file('temporary/miners_stake_amounts.json', temp_miners_stake_amounts_py)
+            temp_miner_wallets_log_py = modification.read_file('temporary/miner_wallets_log.json'); print(".")
+            # print("======================================================realTime GA = " + str(time.time() - realTimeStart))
+            
+            temp_miners_stake_amounts_py = modification.read_file('temporary/miners_stake_amounts.json'); print(".")
+            # print("======================================================realTime GB = " + str(time.time() - realTimeStart))
+            
+            temp_miners_stake_amounts_py[miner.address] = random.randint(0, temp_miner_wallets_log_py[miner.address]); print(".")
+            # print("======================================================realTime GC = " + str(time.time() - realTimeStart))
+            
+            temp_miner_wallets_log_py[miner.address] -= temp_miners_stake_amounts_py[miner.address]; print(".")
+            # print("======================================================realTime GD = " + str(time.time() - realTimeStart))
+            
+            modification.rewrite_file('temporary/miner_wallets_log.json', temp_miner_wallets_log_py); print(".")
+            # print("======================================================realTime GE = " + str(time.time() - realTimeStart))
+            
+            modification.rewrite_file('temporary/miners_stake_amounts.json', temp_miners_stake_amounts_py); print(".")
+            # print("======================================================realTime GF = " + str(time.time() - realTimeStart))
+            
 
 
 def fork_analysis(list_of_miners):

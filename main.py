@@ -13,6 +13,8 @@ import mempool
 from openpyxl import Workbook
 from openpyxl import load_workbook
 
+realTimeStart = time.time()
+
 
 isblackgun = True
 machineName = "[noname]"
@@ -50,6 +52,8 @@ failPendingTime = data["FailPendingTime"]
 uploadBandwidth = data["UploadBandwidth"] * 1024 #Bytes per second
 downloadBandwidth = data["DownloadBandwidth"] * 1024 #Bytes per second
 fastPoS = data["FastPoS"]
+
+print("======================================================realTime A = " + str(time.time() - realTimeStart))
 
 def resetSimData():
     global data, number_of_miner_neighbours, NumOfFogNodes, NumOfTaskPerUser, NumOfMiners, numOfTXperBlock, num_of_users_per_fog_node
@@ -159,15 +163,27 @@ def initiate_miners():
 
     if blockchainPlacement == 1:
         for i in range(NumOfFogNodes):
-            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth))
+            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth)); print(".")
     if blockchainPlacement == 2:
         for i in range(NumOfMiners):
-            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth))
+            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth)); print(".")
+    # print("======================================================realTime EA = " + str(time.time() - realTimeStart))
+    
     for entity in the_miners_list:
-        modification.write_file("temporary/" + entity.address + "_local_chain.json", {})
-        miner_wallets_log_py = modification.read_file("temporary/miner_wallets_log.json")
-        miner_wallets_log_py[str(entity.address)] = data['miners_initial_wallet_value']
-        modification.rewrite_file("temporary/miner_wallets_log.json", miner_wallets_log_py)
+        modification.write_file("temporary/" + entity.address + "_local_chain.json", {}); print(".")
+        # print("======================================================realTime EB = " + str(time.time() - realTimeStart))
+        
+        miner_wallets_log_py = modification.read_file("temporary/miner_wallets_log.json"); print(".")
+        # print("======================================================realTime EC = " + str(time.time() - realTimeStart))
+        
+        miner_wallets_log_py[str(entity.address)] = data['miners_initial_wallet_value']; print(".")
+        # print("======================================================realTime ED = " + str(time.time() - realTimeStart))
+        
+        modification.rewrite_file("temporary/miner_wallets_log.json", miner_wallets_log_py); print(".")
+        # print("======================================================realTime EF = " + str(time.time() - realTimeStart))
+        
+    # print("======================================================realTime EG = " + str(time.time() - realTimeStart))
+    
     print('Miners have been initiated..')
     connect_miners(the_miners_list)
     output.miners_are_up()
@@ -269,8 +285,11 @@ def initiate_genesis_block(AI_wanted):
         genesis_transactions.append(miner_list[i].address)
     genesis_block = new_consensus_module.generate_new_block(genesis_transactions, 'The Network', 0, type_of_consensus, AI_wanted, False)
     output.block_info(genesis_block, type_of_consensus)
-    for elem in miner_list:
-        elem.receive_new_block(genesis_block, type_of_consensus, miner_list, blockchainFunction)
+    if not fastPoS:
+        for elem in miner_list:
+            elem.receive_new_block(genesis_block, type_of_consensus, miner_list, blockchainFunction)
+    else:
+        miner_list[0].receive_new_block(genesis_block, type_of_consensus, miner_list, blockchainFunction)
     output.genesis_block_generation()
 
 
@@ -302,7 +321,10 @@ def inform_miners_of_users_wallets():
 
 import sys
 if __name__ == '__main__':
-    # 
+    
+    print("======================================================realTime B = " + str(time.time() - realTimeStart))
+    
+    
     if len(sys.argv) == 2:
         isblackgun = bool(sys.argv[1])
         blockchainFunction = 3 #Payment
@@ -331,18 +353,34 @@ if __name__ == '__main__':
             injectionRate = int (sys.argv[7])
             print("[blackgun auto mode3+] overwrite: " + "tx per block = " + str(numOfTXperBlock) + ", injection rate = " + str(injectionRate))
     
-
+    print("======================================================realTime C = " + str(time.time() - realTimeStart))
     
     user_input()
+    print("======================================================realTime D = " + str(time.time() - realTimeStart))
+    
     initiate_network()
+    
     type_of_consensus = new_consensus_module.choose_consensus(isblackgun, num_of_consensus)
+    
     trans_delay = define_trans_delay(blockchainPlacement)
+    print("======================================================realTime E = " + str(time.time() - realTimeStart))
+    
     miner_list = initiate_miners()
+    print("======================================================realTime F = " + str(time.time() - realTimeStart))
+    
     AI_assisted_mining_wanted = give_miners_authorization(miner_list, type_of_consensus)
+    
     inform_miners_of_users_wallets()
-    blockchain.stake(miner_list, type_of_consensus)
+    print("======================================================realTime G = " + str(time.time() - realTimeStart))
+    #if not fastPoS:
+    blockchain.stake(miner_list, type_of_consensus, realTimeStart)
+    print("======================================================realTime H = " + str(time.time() - realTimeStart))
+    
     initiate_genesis_block(AI_assisted_mining_wanted)
+    print("======================================================realTime I = " + str(time.time() - realTimeStart))
+    
     send_tasks_to_BC()
+    print("======================================================realTime J = " + str(time.time() - realTimeStart))
     
     #print("++++++++++++++++++++++++++++ time start")
     time_start = time.time()
@@ -373,6 +411,8 @@ if __name__ == '__main__':
     
     elapsed_time = time.time() - time_start
     #print("++++++++++++++++++++++++++++ time end")
+    print("======================================================realTime K = " + str(time.time() - realTimeStart))
+    
     
     number_of_user = NumOfFogNodes * num_of_users_per_fog_node
     number_of_TX = number_of_user * NumOfTaskPerUser
@@ -387,20 +427,21 @@ if __name__ == '__main__':
     
     print("elapsed time = " + str(elapsed_time) + " seconds")
     print("[BG] average block time = " + str(average_block_time_ms) + " ms")
-    with open(machineName + 'result_log.txt', 'a+') as resultfile:
-        resultfile.write("No. user: " + str(number_of_user))
-        resultfile.write(" , No. miner: " + str(NumOfMiners))
-        resultfile.write(" , No. minerNeighbours: " + str(number_of_miner_neighbours))
-        resultfile.write(" , No. tx: " + str(number_of_TX))
-        resultfile.write(" , No. block: " + str(number_of_block))
-        resultfile.write(" , average block time(secs): " + str(average_block_time))
-        resultfile.write(" , average upload data (bytes): " + str(averageUploadDataUsage))
-        resultfile.write(" , average download data (bytes): " + str(averageDownloadDataUsage))
-        resultfile.write(" , elapsed time(secs): " + str(elapsed_time) + "\n")
-    with open(machineName + 'result_avrTime.txt', 'a+') as resultTimeFile:
-        resultTimeFile.write(str(average_block_time)+"\n")
+    # with open(machineName + 'result_log.txt', 'a+') as resultfile:
+    #     resultfile.write("No. user: " + str(number_of_user))
+    #     resultfile.write(" , No. miner: " + str(NumOfMiners))
+    #     resultfile.write(" , No. minerNeighbours: " + str(number_of_miner_neighbours))
+    #     resultfile.write(" , No. tx: " + str(number_of_TX))
+    #     resultfile.write(" , No. block: " + str(number_of_block))
+    #     resultfile.write(" , average block time(secs): " + str(average_block_time))
+    #     resultfile.write(" , average upload data (bytes): " + str(averageUploadDataUsage))
+    #     resultfile.write(" , average download data (bytes): " + str(averageDownloadDataUsage))
+    #     resultfile.write(" , elapsed time(secs): " + str(elapsed_time) + "\n")
+    # with open(machineName + 'result_avrTime.txt', 'a+') as resultTimeFile:
+    #     resultTimeFile.write(str(average_block_time)+"\n")
     
     print("TX_injection_rate = " + str(injectionRate))
+    print("======================================================realTime L = " + str(time.time() - realTimeStart))
     
     filename = machineName + 'result.xlsx'
     new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, uploadBandwidth / 1024, downloadBandwidth / 1024, gossip_activated, failPendingTime, queueLimit, injectionRate, numOfTXperBlock, '<-parameter / result->', number_of_block, test_data.failTime, average_transaction_pending_time_ms, average_block_time_ms, test_data.totalBlockTime, test_data.totalBlockPrepareTime, test_data.totalUploadTime, test_data.totalDownloadTime, test_data.totalNetworkDelayTime, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
@@ -418,6 +459,7 @@ if __name__ == '__main__':
 
     ws.append(new_row)
 
+    print("======================================================realTime M = " + str(time.time() - realTimeStart))
 
     
     for col_num, value in enumerate(headers_row, start=1):
@@ -438,6 +480,8 @@ if __name__ == '__main__':
     new_row[-1].number_format = '0.00'
     
     wb.save(filename)
+    print("======================================================realTime N = " + str(time.time() - realTimeStart))
     
     mempool.MemPool.close()
+    print("======================================================realTime O = " + str(time.time() - realTimeStart))
     

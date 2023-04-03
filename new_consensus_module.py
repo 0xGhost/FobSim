@@ -107,9 +107,9 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             while transaction_remain_time > injectionTime:
                 transaction_remain_time -= injectionTime
                 mempool.MemPool.put(mempool.getRandomTransaction(simulation_time))
-                print("//////////////////////////////////remain time = " + str(transaction_remain_time) + ", add a tx to queue")
+                print("remain time = " + str(transaction_remain_time) + ", add a tx to queue")
             
-        print("----------------------------------mempool queue size: " + str(mempool.MemPool.qsize()))
+        print("mempool queue size: " + str(mempool.MemPool.qsize()))
 
         oldestTransactionTimestamp = mempool.getOldestTimeStamp()
         print("tx oldest time stamp: " + str(oldestTransactionTimestamp) + ", sim time: " + str(simulation_time) + ", failPendingTime: " + str(failPendingTime))
