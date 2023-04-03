@@ -7,6 +7,7 @@ import multiprocessing
 
 keychain = multiprocessing.Queue()
 
+NoMultiprocessing = True
 
 def get_key():
     while not keychain.empty():
@@ -34,6 +35,14 @@ def initiate_files(gossip_activated):
 
 
 def read_file(file_path):
+    if NoMultiprocessing:
+        try:
+            with open(file_path, 'r') as f:
+                file = json.load(f)
+            return file
+        except Exception as e:
+            pass
+        
     while keychain.empty():
         time.sleep(0.1)
     get_key()
@@ -48,6 +57,14 @@ def read_file(file_path):
 
 
 def write_file(file_path, contents):
+    if NoMultiprocessing:
+        try:
+            with open(file_path, 'w') as f:
+                json.dump(contents, f, indent=4)
+            return
+        except Exception as e:
+            pass
+    
     while keychain.empty():
         time.sleep(0.1)
     get_key()
@@ -62,6 +79,17 @@ def write_file(file_path, contents):
 
 
 def rewrite_file(file_path, new_version):
+    if NoMultiprocessing:
+        try:
+            os.remove(file_path)
+        except Exception as e:
+            try:
+                with open(file_path, "w") as f:
+                    json.dump(new_version, f, indent=4)
+                return
+            except Exception as e:
+                pass
+    
     while keychain.empty():
         time.sleep(0.1)
     get_key()
