@@ -391,14 +391,20 @@ if __name__ == '__main__':
     new_consensus_module.miners_trigger(miner_list, type_of_consensus, expected_chain_length, Parallel_PoW_mining,
                                         numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length,
                                         number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate, queueLimit, failPendingTime, fastPoS)
+    print("======================================================realTime JA = " + str(time.time() - realTimeStart))
+    
     print("totalBlockTime = " + str(test_data.totalBlockTime))
     
     #print("++++++++++++++++++++++++++++ B:"+str(time.time() - time_start))
     blockchain.award_winning_miners(len(miner_list), miner_list)
+    print("======================================================realTime JB = " + str(time.time() - realTimeStart))
+    if not fastPoS:
+        blockchain.fork_analysis(miner_list)
+    print("======================================================realTime JC = " + str(time.time() - realTimeStart))
     
-    blockchain.fork_analysis(miner_list)
     output.finish()
     store_fog_data()
+    print("======================================================realTime JD = " + str(time.time() - realTimeStart))
     
     averageDownloadDataUsage = 0
     averageUploadDataUsage = 0

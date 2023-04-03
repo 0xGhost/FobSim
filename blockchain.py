@@ -96,7 +96,7 @@ def fork_analysis(list_of_miners):
     chain_versions = []
     for entity in list_of_miners:
         temp_path = "temporary/" + entity.address + "_local_chain.json"
-        chain = modification.read_file(temp_path)
+        chain = modification.read_file(temp_path); print(".")
         h = hashlib.sha256()
         h.update(str(chain).encode(encoding='UTF-8'))
         hashed_chain = h.hexdigest()
