@@ -10,8 +10,10 @@ import modification
 import new_consensus_module
 import test_data
 import mempool
-from openpyxl import Workbook
-from openpyxl import load_workbook
+# from openpyxl import Workbook
+# from openpyxl import load_workbook
+# import pandas as pd
+import csv
 
 realTimeStart = time.time()
 
@@ -450,42 +452,63 @@ if __name__ == '__main__':
     print("======================================================realTime L = " + str(time.time() - realTimeStart))
     
     filename = machineName + 'result.xlsx'
+    # filename = machineName + 'result.csv'
     new_row = [type_of_consensus, blockchainFunction, blockchainPlacement, number_of_user, NumOfMiners, number_of_miner_neighbours, number_of_TX, delay_between_fog_nodes, delay_between_end_users, uploadBandwidth / 1024, downloadBandwidth / 1024, gossip_activated, failPendingTime, queueLimit, injectionRate, numOfTXperBlock, '<-parameter / result->', number_of_block, test_data.failTime, average_transaction_pending_time_ms, average_block_time_ms, test_data.totalBlockTime, test_data.totalBlockPrepareTime, test_data.totalUploadTime, test_data.totalDownloadTime, test_data.totalNetworkDelayTime, elapsed_time, averageUploadDataUsage, averageDownloadDataUsage]
     headers_row = ['consensus', 'function', 'placement', 'No. user', 'No. miner', 'No. minerNeighbours', 'init No. tx:', 'delay between fog node(ms)', 'delay between end users(ms)', 'upload bandwidth(KB/S)', 'download bandwidth(KB/S)', 'gossip', 'fail pending time(secs)', 'queue limit', 'injection rate(per sec)', 'tx per block', '<-parameter / result->', 'final No. block', 'fail time(secs)', 'average transaction pending time(ms)', 'average block time(ms)', 'simulation time(sec)', 'total prepare time(sec)', 'total upload time(sec)', 'total download time(sec)', 'total network delay time(sec)', 'elapsed time(secs)', 'average upload data(bytes)', 'average download data(bytes)']
+    
     
     # Confirm file exists. 
     # If not, create it, add headers, then append new data
     try:
-        wb = load_workbook(filename)
-        ws = wb.worksheets[0]  # select first worksheet
-    except FileNotFoundError:
-        wb = Workbook()
-        ws = wb.active
-        ws.append(headers_row)
+        with open(filename, 'a', newline='') as file:
+            writer = csv.writer(file)
 
-    ws.append(new_row)
+            # if file already exists, don't write headers again
+            if file.tell() == 0:
+                writer.writerow(headers_row)
+
+            writer.writerow(new_row)
+
+    except FileNotFoundError:
+        with open(filename, 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(headers_row)
+            writer.writerow(new_row)
+    
+    
+    # Confirm file exists. 
+    # If not, create it, add headers, then append new data
+    # try:
+    #     wb = load_workbook(filename)
+    #     ws = wb.worksheets[0]  # select first worksheet
+    # except FileNotFoundError:
+    #     wb = Workbook()
+    #     ws = wb.active
+    #     ws.append(headers_row)
+
+    # ws.append(new_row)
 
     print("======================================================realTime M = " + str(time.time() - realTimeStart))
 
     
-    for col_num, value in enumerate(headers_row, start=1):
-        ws.cell(row=1, column=col_num, value=value)
+    # for col_num, value in enumerate(headers_row, start=1):
+    #     ws.cell(row=1, column=col_num, value=value)
     
-    new_row = ws[ws.max_row]
+    # new_row = ws[ws.max_row]
 
-    new_row[-11].number_format = '0.000000'
-    new_row[-10].number_format = '0.000000'
-    new_row[-9].number_format = '0.000000'
-    new_row[-8].number_format = '0.000000'
-    new_row[-7].number_format = '0.000000'
-    new_row[-6].number_format = '0.000000'
-    new_row[-5].number_format = '0.000000'
-    new_row[-4].number_format = '0.000000'
-    new_row[-3].number_format = '0.000'
-    new_row[-2].number_format = '0.00'
-    new_row[-1].number_format = '0.00'
+    # new_row[-11].number_format = '0.000000'
+    # new_row[-10].number_format = '0.000000'
+    # new_row[-9].number_format = '0.000000'
+    # new_row[-8].number_format = '0.000000'
+    # new_row[-7].number_format = '0.000000'
+    # new_row[-6].number_format = '0.000000'
+    # new_row[-5].number_format = '0.000000'
+    # new_row[-4].number_format = '0.000000'
+    # new_row[-3].number_format = '0.000'
+    # new_row[-2].number_format = '0.00'
+    # new_row[-1].number_format = '0.00'
     
-    wb.save(filename)
+    # wb.save(filename)
     print("======================================================realTime N = " + str(time.time() - realTimeStart))
     
     mempool.MemPool.close()

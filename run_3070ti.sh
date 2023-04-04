@@ -26,27 +26,27 @@ start=$(date +%s.%N)
 
 #txPerBlock=(128 256 512 1024 2048 4096 8192)
 #           1   2   3   4   5   6   7   8   9
-txPerBlock=(5   10  15  20  25  30  35  40  45)
+# txPerBlock=(5   10  15  20  25  30  35  40  45)
 #txPerBlock=(5   10  15  20  25  30  35  40  45)
-# txPerBlock=(10)
+txPerBlock=(10)
 #txPerBlock=(2 4 8 16 32)
 
 #injectionRate=(256 512 1024)
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024)
 #injectionRate=(128 256 512 1024 2048 4096 8192 16384 32768)
 #               1    2    3    4    5    6    7    8    9
-injectionRate1=(240  480  700  950  1260 1400 1700 2000 2200) 
-injectionRate3=(300  640  800  1200 1400 1600 2000 2300 2700)
-#   injectionRate1=(256) 
-#   injectionRate3=(256)
+# injectionRate1=(240  480  700  950  1260 1400 1700 2000 2200) 
+# injectionRate3=(300  640  800  1200 1400 1600 2000 2300 2700)
+  injectionRate1=(256) 
+  injectionRate3=(256)
 
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
 #injectionRate3=(288  640   128  256  512  1024 2048 4096 8192)
 
 #     1 2 3 4 5 6 7 8 9
-step=(2 2 2 2 2 2 2 2 2)
-# step=(2)
+# step=(2 2 2 2 2 2 2 2 2)
+step=(2)
 
 txPerBlock_length=${#txPerBlock[@]}
 
