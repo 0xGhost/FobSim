@@ -22,6 +22,8 @@
 # 5: Delegated Proof of Stake (DPoS)
 # 6: Example New CA
 
+start=$(date +%s.%N)
+
 # txPerBlock=(128 256 512 1024 2048 4096 8192)
 #txPerBlock=(5 10 15 20 25 30)
 #txPerBlock=(2 4)
@@ -36,21 +38,23 @@ txPerBlock=(5   10  15  20  25  30  35  40  45)
 #txPerBlock=(5   10)
 
 #               1    2    3    4    5    6    7    8    9
-injectionRate1=(240  480  700  950  1260 1400 1700 2000 2200) 
-injectionRate3=(300  640  800  1200 1400 1600 2000 2300 2700)
+injectionRate1=(200  300  500  700  1000 1400 1600 2000 2100) 
+injectionRate3=(300  500  700  1000 1400 1600 2000 2300 2400)
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
 #injectionRate3=(288  640   128  256  512  1024 2048 4096 8192)
 
 
 #     1 2 3 4 5 6 7 8 9
-step=(2 2 2 2 2 4 4 4 4)
+ step=1
+#  step=(2 2 2 2 2 2 2 2 2)
 
 txPerBlock_length=${#txPerBlock[@]}
 
 for ((i = 0; i < txPerBlock_length; i++))
 do
-    for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
+    for j in $(seq ${injectionRate1[$i]} $step ${injectionRate3[$i]}); 
+    # for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
     do
         for k in {1..20} # runs
         do
@@ -60,6 +64,10 @@ do
     done
 done
 
+end=$(date +%s.%N)
+runtime=$(echo "$end - $start" | bc)
+
+echo "Runtime: $runtime seconds"
 
 # runs=10
 
