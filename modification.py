@@ -42,6 +42,7 @@ def read_file(file_path):
             return file
         except Exception as e:
             pass
+        # return
         
     while keychain.empty():
         time.sleep(0.1)
@@ -64,6 +65,7 @@ def write_file(file_path, contents):
             return
         except Exception as e:
             pass
+        # return
     
     while keychain.empty():
         time.sleep(0.1)
@@ -89,9 +91,10 @@ def rewrite_file(file_path, new_version):
                 return
             except Exception as e:
                 pass
+        # return
     
     while keychain.empty():
-        time.sleep(0.1)
+        time.sleep(0.01)
     get_key()
     while True:
         try:
