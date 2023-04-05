@@ -45,7 +45,7 @@ def read_file(file_path):
         # return
         
     while keychain.empty():
-        time.sleep(0.1)
+        time.sleep(0.01)
     get_key()
     while True:
         try:
@@ -68,7 +68,7 @@ def write_file(file_path, contents):
         # return
     
     while keychain.empty():
-        time.sleep(0.1)
+        time.sleep(0.01)
     get_key()
     while True:
         try:
