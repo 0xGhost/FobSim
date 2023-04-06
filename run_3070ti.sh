@@ -26,19 +26,22 @@ start=$(date +%s.%N)
 
 #txPerBlock=(128 256 512 1024 2048 4096 8192)
 #           1   2   3   4   5   6   7   8   9
-txPerBlock=(5   10  15  20  25  30  35  40  45)
-#txPerBlock=(5   10  15  20  25  30  35  40  45)
-# txPerBlock=(10)
+# txPerBlock=(5   10  15  20  25  30  35  40  45)
+# txPerBlock=(100 200 300 400 500 600 700 800 900)
+txPerBlock=(900)
 #txPerBlock=(2 4 8 16 32)
 
 #injectionRate=(256 512 1024)
 #injectionRate=(2 4 8 16 32 64 128 256 512 1024)
 #injectionRate=(128 256 512 1024 2048 4096 8192 16384 32768)
-#               1    2    3    4    5    6    7    8    9
-injectionRate1=(150  340  530  650  800  950  1000 1000 1000) 
-injectionRate3=(250  500  650  850  1050 1200 1600 2000 2100)
-# injectionRate1=(256) 
-# injectionRate3=(256)
+#                 1    2    3    4    5    6    7    8    9
+# injectionRate1=(150  340  530  650  800  950  1000 1000 1000) 
+# injectionRate3=(250  500  650  850  1050 1200 1600 2000 2100)
+# injectionRate1=(2000 3500 6000  8000   9500  11000 12000 13000 14500) 
+# injectionRate3=(3000 5000 7500  10000  11000 13000 14000 16000 17000)
+#                   1    2   3      4      5     6    7     8     9
+injectionRate1=(14500) 
+injectionRate3=(17000)
 
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
@@ -46,7 +49,8 @@ injectionRate3=(250  500  650  850  1050 1200 1600 2000 2100)
 
 #     1 2 3 4 5 6 7 8 9
 # step=(2 2 2 2 2 2 2 2 2)
-# step=(2)
+# step=(10 10 20 20 40 40 100 100 100)
+step=(100)
 
 txPerBlock_length=${#txPerBlock[@]}
 
@@ -54,7 +58,7 @@ for ((i = 0; i < txPerBlock_length; i++))
 do
     for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
     do
-        for k in {1..20} # runs
+        for k in {1..10} # runs
         do
             # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus] [tx per block] [injection rate]
             python3 main.py 1 [3070ti] 1 2 2 "${txPerBlock[$i]}" "$j"

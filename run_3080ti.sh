@@ -34,19 +34,25 @@ start=$(date +%s.%N)
 # injectionRate=(16)
 
 #           1   2   3   4   5   6   7   8   9
-txPerBlock=(5   10  15  20  25  30  35  40  45)
+# txPerBlock=(5   10  15  20  25  30  35  40  45)
 #txPerBlock=(5   10)
+txPerBlock=(100 200 300 400 500 600 700 800 900)
+
 
 #               1    2    3    4    5    6    7    8    9
-injectionRate1=(150  340  530  650  800  950  1100 1250 1450) 
-injectionRate3=(250  500  650  850  1050 1300 1600 1700 1900)
+# injectionRate1=(150  340  530  650  800  950  1100 1250 1450) 
+# injectionRate3=(250  500  650  850  1050 1300 1600 1700 1900)
+injectionRate1=(2000 3500 6000  8000   9500  11000 12000 13000 14500) 
+injectionRate3=(3000 5000 7500  10000  11000 13000 14000 16000 17000)
+
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
 #injectionRate3=(288  640   128  256  512  1024 2048 4096 8192)
 
 
 #     1 2 3 4 5 6 7 8 9
- step=5
+#  step=5
+ step=100
 #  step=(2 2 2 2 2 2 2 2 2)
 
 txPerBlock_length=${#txPerBlock[@]}
