@@ -509,8 +509,8 @@ if __name__ == '__main__':
     # new_row[-1].number_format = '0.00'
     
     # wb.save(filename)
-    print("======================================================realTime N = " + str(time.time() - realTimeStart))
+    # print("======================================================realTime N = " + str(time.time() - realTimeStart))
     
-    mempool.MemPool.close()
-    print("======================================================realTime O = " + str(time.time() - realTimeStart))
+    # mempool.MemPool.close()
+    # print("======================================================realTime O = " + str(time.time() - realTimeStart))
     

@@ -1,7 +1,9 @@
 import multiprocessing
+from queue import Queue
 import random
 
-MemPool = multiprocessing.Queue()
+# MemPool = multiprocessing.Queue()
+MemPool = Queue()
 
 index = 0
 

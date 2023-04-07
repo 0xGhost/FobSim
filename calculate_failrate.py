@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import sys
 import numpy
 import matplotlib
-matplotlib.use('TkAgg')
+# matplotlib.use('TkAgg')
 
 filename = ' '
 

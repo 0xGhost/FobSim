@@ -107,18 +107,18 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             while transaction_remain_time > injectionTime:
                 transaction_remain_time -= injectionTime
                 mempool.MemPool.put(mempool.getRandomTransaction(simulation_time))
-                print("remain time = " + str(transaction_remain_time) + ", add a tx to queue")
+                # print("remain time = " + str(transaction_remain_time) + ", add a tx to queue")
             
         print("mempool queue size: " + str(mempool.MemPool.qsize()))
-
-        oldestTransactionTimestamp = mempool.getOldestTimeStamp()
-        print("tx oldest time stamp: " + str(oldestTransactionTimestamp) + ", sim time: " + str(simulation_time) + ", failPendingTime: " + str(failPendingTime))
-        longestPendingTime = simulation_time - oldestTransactionTimestamp
-        if failPendingTime > 0 and longestPendingTime > failPendingTime:
-            print("pending time failed: " + str(longestPendingTime))
-            test_data.numOfBlock = numOfBlock
-            test_data.failTime = simulation_time
-            return
+        if failPendingTime > 0:
+            oldestTransactionTimestamp = mempool.getOldestTimeStamp()
+            print("tx oldest time stamp: " + str(oldestTransactionTimestamp) + ", sim time: " + str(simulation_time) + ", failPendingTime: " + str(failPendingTime))
+            longestPendingTime = simulation_time - oldestTransactionTimestamp
+            if longestPendingTime > failPendingTime:
+                print("pending time failed: " + str(longestPendingTime))
+                test_data.numOfBlock = numOfBlock
+                test_data.failTime = simulation_time
+                return
             
         if queueLimit > 0 and queueLimit < mempool.MemPool.qsize():
             print("queue too long, limit: " + str(queueLimit))
