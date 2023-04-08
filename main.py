@@ -14,6 +14,7 @@ import mempool
 # from openpyxl import load_workbook
 # import pandas as pd
 import csv
+import sys
 
 realTimeStart = time.time()
 
@@ -21,8 +22,12 @@ realTimeStart = time.time()
 isblackgun = True
 machineName = "[noname]"
 
-
-data = modification.read_file("Sim_parameters.json")
+if len(sys.argv) >= 6:
+    isblackgun = bool(sys.argv[1])
+    machineName = sys.argv[2]
+    
+data = modification.read_file(machineName+"Sim_parameters.json")
+# data = modification.read_file("Sim_parameters.json")
 list_of_end_users = []
 fogNodes = []
 transactions_list = []
@@ -57,34 +62,6 @@ fastPoS = data["FastPoS"]
 
 print("======================================================realTime A = " + str(time.time() - realTimeStart))
 
-def resetSimData():
-    global data, number_of_miner_neighbours, NumOfFogNodes, NumOfTaskPerUser, NumOfMiners, numOfTXperBlock, num_of_users_per_fog_node
-    global expected_chain_length, gossip_activated, Automatic_PoA_miners_authorization, Parallel_PoW_mining, delay_between_fog_nodes
-    global delay_between_end_users, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, injectionRate, queueLimit
-    global uploadBandwidth, downloadBandwidth, failPendingTime, fastPoS
-    
-    data = modification.read_file(machineName+"Sim_parameters.json")
-    number_of_miner_neighbours = data["number_of_each_miner_neighbours"]
-    NumOfFogNodes = data["NumOfFogNodes"]
-    NumOfTaskPerUser = data["NumOfTaskPerUser"]
-    NumOfMiners = data["NumOfMiners"]
-    numOfTXperBlock = data["numOfTXperBlock"]
-    num_of_users_per_fog_node = data["num_of_users_per_fog_node"]
-    expected_chain_length = ceil((num_of_users_per_fog_node * NumOfTaskPerUser * NumOfFogNodes) / numOfTXperBlock)
-    gossip_activated = data["Gossip_Activated"]
-    Automatic_PoA_miners_authorization = data["Automatic_PoA_miners_authorization?"]
-    Parallel_PoW_mining = data["Parallel_PoW_mining?"]
-    delay_between_fog_nodes = data["delay_between_fog_nodes"]
-    delay_between_end_users = data["delay_between_end_users"]
-    poet_block_time = data['poet_block_time']
-    Asymmetric_key_length = data['Asymmetric_key_length']
-    number_of_DPoS_delegates = data['Num_of_DPoS_delegates'] 
-    injectionRate = data["TX_injection_rate"] #per second
-    queueLimit = data["QueueTooLongLimit"]
-    failPendingTime = data["FailPendingTime"]
-    uploadBandwidth = data["UploadBandwidth"] * 1024
-    downloadBandwidth = data["DownloadBandwidth"] * 1024
-    fastPoS = data["FastPoS"]
     
     
 
@@ -165,23 +142,23 @@ def initiate_miners():
 
     if blockchainPlacement == 1:
         for i in range(NumOfFogNodes):
-            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth)); print(".")
+            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth))
     if blockchainPlacement == 2:
         for i in range(NumOfMiners):
-            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth)); print(".")
+            the_miners_list.append(miner.Miner(i + 1, trans_delay, gossip_activated, uploadBandwidth, downloadBandwidth))
     # print("======================================================realTime EA = " + str(time.time() - realTimeStart))
     
     for entity in the_miners_list:
-        modification.write_file("temporary/" + entity.address + "_local_chain.json", {}); print(".")
+        modification.write_file("temporary/" + entity.address + "_local_chain.json", {})
         # print("======================================================realTime EB = " + str(time.time() - realTimeStart))
         
-        miner_wallets_log_py = modification.read_file("temporary/miner_wallets_log.json"); print(".")
+        miner_wallets_log_py = modification.read_file("temporary/miner_wallets_log.json")
         # print("======================================================realTime EC = " + str(time.time() - realTimeStart))
         
-        miner_wallets_log_py[str(entity.address)] = data['miners_initial_wallet_value']; print(".")
+        miner_wallets_log_py[str(entity.address)] = data['miners_initial_wallet_value']
         # print("======================================================realTime ED = " + str(time.time() - realTimeStart))
         
-        modification.rewrite_file("temporary/miner_wallets_log.json", miner_wallets_log_py); print(".")
+        modification.rewrite_file("temporary/miner_wallets_log.json", miner_wallets_log_py)
         # print("======================================================realTime EF = " + str(time.time() - realTimeStart))
         
     # print("======================================================realTime EG = " + str(time.time() - realTimeStart))
@@ -321,7 +298,7 @@ def inform_miners_of_users_wallets():
         for i in range(len(miner_list)):
             modification.rewrite_file(str("temporary/" + miner_list[i].address + "_users_wallets.json"), user_wallets)
 
-import sys
+
 if __name__ == '__main__':
     
     print("======================================================realTime B = " + str(time.time() - realTimeStart))
@@ -348,7 +325,6 @@ if __name__ == '__main__':
         blockchainPlacement = int(sys.argv[4])
         num_of_consensus = int(sys.argv[5])
         blockchain.setPrefix(sys.argv[2])
-        resetSimData()
         print("[blackgun auto mode3]" + str(isblackgun)) 
         if len(sys.argv) > 6:
             numOfTXperBlock = int(sys.argv[6])

@@ -143,11 +143,15 @@ def trigger_pos_miners(the_miners_list, the_type_of_consensus, expected_chain_le
             if stake > biggest_stake:
                 biggest_stake = stake
                 final_chosen_miner = chosen_miner
+                
+        if fastPoS:
+            final_chosen_miner = the_miners_list[0]        
+                
         for entity in the_miners_list:
             entity.next_pos_block_from = final_chosen_miner.address
 
-        if fastPoS:
-            final_chosen_miner = the_miners_list[0]
+
+
             
         #prepare_time = 0
         prepare_time = time.time() - start_time
@@ -434,7 +438,7 @@ def generate_new_block(transactions, generator_id, previous_hash, type_of_consen
 
 
 def miners_trigger(the_miners_list, the_type_of_consensus, expected_chain_length, Parallel_PoW_mining, numOfTXperBlock, blockchainFunction, poet_block_time, Asymmetric_key_length, number_of_DPoS_delegates, AI_assisted_mining_wanted, injectionRate = 0, queueLimit = -1, failPendingTime = -4.0, fastPoS = False):
-    output.mempool_info(mempool.MemPool)
+    # output.mempool_info(mempool.MemPool)
     
     if injectionRate > 0:
         mempool.copyQueueToTransactionList()

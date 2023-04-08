@@ -72,22 +72,22 @@ def generator_is_adversary(generator, list_of_miners):
 def stake(list_of_miners, num_of_consensus, realTimeStart = 0.0):
     if num_of_consensus == 2:
         for miner in list_of_miners:
-            temp_miner_wallets_log_py = modification.read_file('temporary/miner_wallets_log.json'); print(".")
+            temp_miner_wallets_log_py = modification.read_file('temporary/miner_wallets_log.json')
             # print("======================================================realTime GA = " + str(time.time() - realTimeStart))
             
-            temp_miners_stake_amounts_py = modification.read_file('temporary/miners_stake_amounts.json'); print(".")
+            temp_miners_stake_amounts_py = modification.read_file('temporary/miners_stake_amounts.json')
             # print("======================================================realTime GB = " + str(time.time() - realTimeStart))
             
-            temp_miners_stake_amounts_py[miner.address] = random.randint(0, temp_miner_wallets_log_py[miner.address]); print(".")
+            temp_miners_stake_amounts_py[miner.address] = random.randint(0, temp_miner_wallets_log_py[miner.address])
             # print("======================================================realTime GC = " + str(time.time() - realTimeStart))
             
-            temp_miner_wallets_log_py[miner.address] -= temp_miners_stake_amounts_py[miner.address]; print(".")
+            temp_miner_wallets_log_py[miner.address] -= temp_miners_stake_amounts_py[miner.address]
             # print("======================================================realTime GD = " + str(time.time() - realTimeStart))
             
-            modification.rewrite_file('temporary/miner_wallets_log.json', temp_miner_wallets_log_py); print(".")
+            modification.rewrite_file('temporary/miner_wallets_log.json', temp_miner_wallets_log_py)
             # print("======================================================realTime GE = " + str(time.time() - realTimeStart))
             
-            modification.rewrite_file('temporary/miners_stake_amounts.json', temp_miners_stake_amounts_py); print(".")
+            modification.rewrite_file('temporary/miners_stake_amounts.json', temp_miners_stake_amounts_py)
             # print("======================================================realTime GF = " + str(time.time() - realTimeStart))
             
 

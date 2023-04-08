@@ -7,6 +7,7 @@ import encryption_module
 import modification
 import sys
 import test_data
+import main
 
 class Miner:
     def __init__(self, address, trans_delay, gossiping, uploadBandwidth = 0, downloadBandwidth = 0):
@@ -70,7 +71,11 @@ class Miner:
                     download_time += blockSize / (float)(self.downloadBandwidth)
                     if not fastPoS:
                         elem.receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function)
+                      
             time_cost_of_send = time.time() - time_before_send
+            
+            if fastPoS:
+                miner_list[0].receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function) 
             print("+++++++++++++++++++++++++ uploadtime = " + str(upload_time))
             #print("  ++++++++++++++++++++++++++++ ADC:"+str(time.time() - time_start))
         #print("  ++++++++++++++++++++++++++++ ADEend:"+str(time.time() - time_start))
@@ -127,14 +132,13 @@ class Miner:
             #print("   ++++++++++++++++++++++++++++ ADBE:"+str(time.time() - time_start))
             if not block_already_received:
                 self.downloadDataUsage += sys.getsizeof(new_block)
-                
                 if new_consensus_module.block_is_valid(type_of_consensus, new_block, self.top_block, self.next_pos_block_from, miner_list, self.delegates):
                     self.add(new_block, blockchain_function, miner_list)
-                    
                     #print("miner sleeping (trans_delay):" + str(self.trans_delay) + "secs")
                     #time.sleep(self.trans_delay)
                     #print("miner wake up")
-                    
+                    if main.fastPoS:
+                        return
                     for elem in miner_list:
                         if elem.address in self.neighbours:
                             self.uploadDataUsage += sys.getsizeof(new_block)
@@ -172,7 +176,7 @@ class Miner:
         local_chain_temporary_file = modification.read_file("temporary/" + self.address + "_local_chain.json")
         if len(local_chain_temporary_file) == 0:
             ready = True
-        else:
+        else:          
             condition = blockchain_function == 3 and self.validate_transactions(block['Body']['transactions'], "receiver")
             if blockchain_function != 3 or condition:
                 if block['Body']['previous_hash'] == self.top_block['Header']['hash']:

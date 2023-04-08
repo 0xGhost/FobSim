@@ -23,12 +23,12 @@
 # 6: Example New CA
 
 start=$(date +%s.%N)
-
+lastEnd=$start
 #txPerBlock=(128 256 512 1024 2048 4096 8192)
 #           1   2   3   4   5   6   7   8   9
 # txPerBlock=(5   10  15  20  25  30  35  40  45)
 # txPerBlock=(100 200 300 400 500 600 700 800 900)
-txPerBlock=(900)
+txPerBlock=(100)
 #txPerBlock=(2 4 8 16 32)
 
 #injectionRate=(256 512 1024)
@@ -40,8 +40,8 @@ txPerBlock=(900)
 # injectionRate1=(2000 3500 6000  8000   9500  11000 12000 13000 14500) 
 # injectionRate3=(3000 5000 7500  10000  11000 13000 14000 16000 17000)
 #                   1    2   3      4      5     6    7     8     9
-injectionRate1=(14500) 
-injectionRate3=(17000)
+injectionRate1=(2000) 
+injectionRate3=(3000)
 
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
@@ -62,6 +62,13 @@ do
         do
             # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus] [tx per block] [injection rate]
             python3 main.py 1 [3070ti] 1 2 2 "${txPerBlock[$i]}" "$j"
+
+            newEnd=$(date +%s.%N)
+            runtime1=$(echo "$newEnd - $lastEnd" | bc)
+            lastEnd=$newEnd
+            echo "Runtime: $runtime1 seconds"
+
+            sleep 10
         done
     done
 done
@@ -69,7 +76,7 @@ done
 end=$(date +%s.%N)
 runtime=$(echo "$end - $start" | bc)
 
-echo "Runtime: $runtime seconds"
+echo "Total Runtime: $runtime seconds"
 
 # txPerBlock_length=${#txPerBlock[@]}
 # for ((i = 0; i < txPerBlock_length; i++))
