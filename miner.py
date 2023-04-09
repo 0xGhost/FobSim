@@ -74,8 +74,8 @@ class Miner:
                       
             time_cost_of_send = time.time() - time_before_send
             
-            if fastPoS:
-                miner_list[0].receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function) 
+            # if fastPoS:
+                # miner_list[0].receive_new_block(new_block, type_of_consensus, miner_list, blockchain_function) 
             print("+++++++++++++++++++++++++ uploadtime = " + str(upload_time))
             #print("  ++++++++++++++++++++++++++++ ADC:"+str(time.time() - time_start))
         #print("  ++++++++++++++++++++++++++++ ADEend:"+str(time.time() - time_start))
