@@ -65,7 +65,8 @@ class Miner:
             download_time = 0
             for elem in miner_list:
                 if elem.address in self.neighbours:
-                    blockSize = sys.getsizeof(new_block)
+                    blockSize = sys.getsizeof(str(new_block))
+                    # print("-------------------------------------------blockSize = " + str(blockSize) + ", block: " + str(new_block))
                     self.uploadDataUsage += blockSize
                     upload_time += blockSize / (float)(self.uploadBandwidth)
                     download_time += blockSize / (float)(self.downloadBandwidth)
