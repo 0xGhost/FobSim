@@ -1,7 +1,7 @@
 {
   "NumOfFogNodes": 1,
   "num_of_users_per_fog_node": 10,
-  "NumOfTaskPerUser": 100,
+  "NumOfTaskPerUser": 10,
   "NumOfMiners": 10,
   "number_of_each_miner_neighbours": 3,
   "numOfTXperBlock": 2,
@@ -19,7 +19,7 @@
   "Num_of_DPoS_delegates": 2,
   "STOR_PLC(0=in the Fog,1=in the BC)": 1,
   "TX_injection_rate" : 2.0, "_3" : "tx per second",
-  "QueueTooLongLimit" : 2000,
+  "QueueTooLongLimit" : 200,
   "FailPendingTime" : -2, "_4" : "seond",
   "UploadBandwidth" : 100, "_2" : "KB per second",
   "DownloadBandwidth" : 200,

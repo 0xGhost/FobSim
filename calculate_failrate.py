@@ -63,3 +63,22 @@ plt.legend()
 plt.subplots_adjust(left = 0.01, right = 0.99)
 plt.savefig("failrate_plot.png")
 print("Plot file generated")
+
+# Function to find the maximum injection rate for a given fail rate condition
+def find_max_injection_rate(df, fail_rate_condition):
+    df_filtered = df[df['fail_rate'] <= fail_rate_condition]
+    return df_filtered.groupby('tx per block')['injection rate(per sec)'].max().reset_index(name=f'max_injection_rate_{int(fail_rate_condition * 100)}')
+
+# Find the maximum injection rate for fail rate conditions <= 5% and <= 10%
+df_max_injection_1 = find_max_injection_rate(df_rate, 0.0)
+df_max_injection_2 = find_max_injection_rate(df_rate, 0.10)
+df_max_injection_3 = find_max_injection_rate(df_rate, 0.20)
+
+# Merge the results into a single DataFrame
+df_max_injection_merged_0_5 = pd.merge(df_max_injection_1, df_max_injection_2, on='tx per block', how='outer')
+df_max_injection_merged = pd.merge(df_max_injection_merged_0_5, df_max_injection_3, on='tx per block', how='outer')
+
+
+# Write the result to an Excel file
+df_max_injection_merged.to_excel('max_injection_rate.xlsx', index=False)
+print("Excel max injection rate result file for multiple conditions generated")
