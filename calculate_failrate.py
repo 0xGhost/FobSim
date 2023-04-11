@@ -5,13 +5,21 @@ import numpy
 import matplotlib
 # matplotlib.use('TkAgg')
 
-filename = ' '
+filename = 'failrate_input.csv'
+failrate_limit1 = 0.00
+failrate_limit2 = 0.05
+failrate_limit3 = 0.10
 
 #handle console arguments
-if len(sys.argv) == 2:
+if len(sys.argv) >= 2:
     filename = sys.argv[1]
-else:
-    filename = 'failrate_input.csv'
+
+if len(sys.argv) >= 5:
+    failrate_limit1 = sys.argv[2]
+    failrate_limit2 = sys.argv[3]
+    failrate_limit3 = sys.argv[4]
+    
+
 
 # read the CSV file into a pandas DataFrame
 df = pd.read_csv(filename)
@@ -67,12 +75,30 @@ print("Plot file generated")
 # Function to find the maximum injection rate for a given fail rate condition
 def find_max_injection_rate(df, fail_rate_condition):
     df_filtered = df[df['fail_rate'] <= fail_rate_condition]
-    return df_filtered.groupby('tx per block')['injection rate(per sec)'].max().reset_index(name=f'max_injection_rate_{int(fail_rate_condition * 100)}')
+    df_not_filtered = df[df['fail_rate'] > fail_rate_condition]
+    df_max_injection = pd.DataFrame()
+
+    for tx in df['tx per block'].unique():
+        filtered_values = df_filtered[df_filtered['tx per block'] == tx]['injection rate(per sec)']
+        not_filtered_values = df_not_filtered[df_not_filtered['tx per block'] == tx]['injection rate(per sec)']
+
+        if not_filtered_values.empty:
+            max_injection_rate = filtered_values.max()
+        else:
+            min_not_filtered_value = not_filtered_values.min()
+            max_injection_rate = filtered_values[filtered_values < min_not_filtered_value].max()
+
+        df_max_injection = df_max_injection.append({
+            'tx per block': tx,
+            f'max_injection_rate_{int(fail_rate_condition * 100)}': max_injection_rate
+        }, ignore_index=True)
+
+    return df_max_injection
 
 # Find the maximum injection rate for fail rate conditions <= 5% and <= 10%
-df_max_injection_1 = find_max_injection_rate(df_rate, 0.0)
-df_max_injection_2 = find_max_injection_rate(df_rate, 0.10)
-df_max_injection_3 = find_max_injection_rate(df_rate, 0.20)
+df_max_injection_1 = find_max_injection_rate(df_rate, failrate_limit1)
+df_max_injection_2 = find_max_injection_rate(df_rate, failrate_limit2)
+df_max_injection_3 = find_max_injection_rate(df_rate, failrate_limit3)
 
 # Merge the results into a single DataFrame
 df_max_injection_merged_0_5 = pd.merge(df_max_injection_1, df_max_injection_2, on='tx per block', how='outer')
