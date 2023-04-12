@@ -76,7 +76,7 @@ print("Plot file generated")
 def find_max_injection_rate(df, fail_rate_condition):
     df_filtered = df[df['fail_rate'] <= fail_rate_condition]
     df_not_filtered = df[df['fail_rate'] > fail_rate_condition]
-    df_max_injection = pd.DataFrame()
+    df_max_injection_list = []
 
     for tx in df['tx per block'].unique():
         filtered_values = df_filtered[df_filtered['tx per block'] == tx]['injection rate(per sec)']
@@ -88,11 +88,12 @@ def find_max_injection_rate(df, fail_rate_condition):
             min_not_filtered_value = not_filtered_values.min()
             max_injection_rate = filtered_values[filtered_values < min_not_filtered_value].max()
 
-        df_max_injection = df_max_injection.append({
+        df_max_injection_list.append({
             'tx per block': tx,
             f'max_injection_rate_{int(fail_rate_condition * 100)}': max_injection_rate
-        }, ignore_index=True)
+        })
 
+    df_max_injection = pd.DataFrame(df_max_injection_list)
     return df_max_injection
 
 # Find the maximum injection rate for fail rate conditions <= 5% and <= 10%
