@@ -37,23 +37,23 @@ start=$(date +%s.%N)
 # txPerBlock=(5   10  15  20  25  30  35  40  45)
 #txPerBlock=(5   10)
 # txPerBlock=(300)
-# txPerBlock=(100 200 300 400 500 600 700 800 900)
+txPerBlock=(100 200 300 400 500 600 700 800 900)
 
 #           1   2   3   4   5   6   7   8   9  10 11 12 13 14 15 16 17 18 19
-txPerBlock=(5   10  15  20  25  30  35  40  45 50 55 60 65 70 75 80 85 90 95)
+# txPerBlock=(5   10  15  20  25  30  35  40  45 50 55 60 65 70 75 80 85 90 95)
 
 
 #               1    2    3    4    5    6    7    8    9
 # injectionRate1=(150  340  530  650  800  950  1100 1250 1450) 
 # injectionRate3=(250  500  650  850  1050 1300 1600 1700 1900)
-# injectionRate1=(1500 4000 5500  8500 11000 13500 16000 20000 24000) 
+# injectionRate1=(100 400 550  850 1100 1350 1600 2000 2400) 
 # injectionRate3=(3000 6000 8500 12000 16000 19000 22000 28000 32000)
 
 #                 1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17   18   19
-injectionRate1=(50   50    50   60   70   80   90  100  100  100  100  100  100  100  100  100  100  100  100) 
-injectionRate3=(100  120  160  170  180  200  210  220  220  220  220  250  250  250  250  250  300  300  300)
-# injectionRate1=(7000) 
-# injectionRate3=(10000)
+# injectionRate1=(50   50    50   60   70   80   90  100  100  100  100  100  100  100  100  100  100  100  100) 
+# injectionRate3=(100  120  160  170  180  200  210  220  220  220  220  250  250  250  250  250  300  300  300)
+injectionRate1=50
+injectionRate3=500
 
 #injectionRate1=(256  576    8    16   32   64   128  256  512) 
 #injectionRate2=(16  32   64   128  256  512  1024 2048 4096)
@@ -62,17 +62,18 @@ injectionRate3=(100  120  160  170  180  200  210  220  220  220  220  250  250 
 
 #     1 2 3 4 5 6 7 8 9
 #  step=5
- step=2
+ step=10
 #  step=(2 2 2 2 2 2 2 2 2)
 
 txPerBlock_length=${#txPerBlock[@]}
 
 for ((i = 0; i < txPerBlock_length; i++))
 do
-    for j in $(seq ${injectionRate1[$i]} $step ${injectionRate3[$i]}); 
+    for j in $(seq $injectionRate1 $step $injectionRate3); 
+    # for j in $(seq ${injectionRate1[$i]} $step ${injectionRate3[$i]}); 
     # for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
     do
-        for k in {1..100} # runs
+        for k in {1..10} # runs
         do
             # python3 main.py [isBlackGun] [MachineName] [function] [placement] [consensus] [tx per block] [injection rate]
             python3 main.py 1 [3080ti] 1 2 2 "${txPerBlock[$i]}" "$j"

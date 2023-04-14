@@ -1,7 +1,7 @@
 {
   "NumOfFogNodes": 1,
   "num_of_users_per_fog_node": 10,
-  "NumOfTaskPerUser": 10,
+  "NumOfTaskPerUser": 100,
   "NumOfMiners": 10,
   "number_of_each_miner_neighbours": 3,
   "numOfTXperBlock": 32,
