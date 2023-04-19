@@ -24,6 +24,25 @@ if len(sys.argv) >= 5:
 # read the CSV file into a pandas DataFrame
 df = pd.read_csv(filename)
 
+
+
+
+# Calculate the weighted average of "average block time(ms)" using "final No. block" as the weight
+df['weighted_block_time'] = df['average block time(ms)'] * df['final No. block']
+df_weighted_avg_block_time = df.groupby('tx per block').agg(
+    {'weighted_block_time': 'sum', 'final No. block': 'sum'}).reset_index()
+df_weighted_avg_block_time['avg_block_time'] = df_weighted_avg_block_time['weighted_block_time'] / df_weighted_avg_block_time['final No. block']
+
+# Drop the intermediate columns and keep only the weighted average
+df_weighted_avg_block_time = df_weighted_avg_block_time.drop(columns=['weighted_block_time', 'final No. block'])
+
+# Write the result to an Excel file
+df_weighted_avg_block_time.to_excel('avg_block_time.xlsx', index=False)
+print("Excel weighted average block time result file (tx per block only) generated")
+
+
+
+
 # filter the DataFrame to include only the rows where "Fail time(secs)" < 0
 df_filtered = df[df['fail time(secs)'] < 0]
 
@@ -44,7 +63,8 @@ print("Excel result file generated")
 tx_values = df_rate['tx per block'].unique()
 
 fig = plt.figure()
-fig.set_figwidth(200)
+fig.set_figwidth(60)
+fig.set_figheight(10)
 
 
 # Loop over tx_values and plot a curve for each one
@@ -60,8 +80,8 @@ plt.title('Injection Rate vs. Fail Rate')
 plt.ylabel('Fail Rate')
 plt.xlabel('Injection Rate')
 
-plt.xticks(numpy.arange(150,2100,10))
-plt.yticks(numpy.arange(0,0.5,0.05))
+plt.xticks(numpy.arange(40,350,10))
+plt.yticks(numpy.arange(0,1,0.05))
 plt.grid(axis='y')
 
 # Add legend to plot
@@ -90,7 +110,7 @@ def find_max_injection_rate(df, fail_rate_condition):
 
         df_max_injection_list.append({
             'tx per block': tx,
-            f'max_injection_rate_{int(fail_rate_condition * 100)}': max_injection_rate
+            f'fail_rate<={int(fail_rate_condition * 100)}%': max_injection_rate
         })
 
     df_max_injection = pd.DataFrame(df_max_injection_list)
