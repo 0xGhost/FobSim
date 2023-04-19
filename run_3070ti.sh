@@ -70,7 +70,7 @@ do
             lastEnd=$newEnd
             echo "Runtime: $runtime1 seconds"
 
-            # sleep 10
+            sleep 10
         done
     done
 done

@@ -2,6 +2,7 @@ import random
 from random import randrange
 import output
 import modification
+import time
 
 data = modification.read_file("Sim_parameters.json")
 
@@ -32,9 +33,10 @@ class User:
                 break
 
     def __apply_first_functionality(self, num_of_task_per_user, blockchain_function): #data management
+        start_time = time.time()
         for task_number in range(num_of_task_per_user):
             #self.tasks.append([random.randint(0, 1000000), blockchain_function])
-            self.tasks.append([0, random.randint(0, 100000000), random.randint(0, 100000000), random.randint(0, 100000000), random.randint(0, 100000000), blockchain_function]) # game asset trading data: timestamp, old owner, new owner, item, quentity
+            self.tasks.append([time.time() - start_time, random.randint(0, 100000000), random.randint(0, 100000000), random.randint(0, 100000000), random.randint(0, 100000000), blockchain_function]) # game asset trading data: timestamp, old owner, new owner, item, quentity
         output.txs_success(num_of_task_per_user, self.addressParent, self.addressSelf)
 
     def __apply_second_functionality(self, num_of_task_per_user, blockchain_function):

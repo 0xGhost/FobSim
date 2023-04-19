@@ -8,7 +8,7 @@ def block_info(block, consensus_algorithm):
           " and is generated into the Blockchain network")
     print("**************************")
     print("transactions:")
-    # print(block['Body']['transactions'])
+    print(block['Body']['transactions'])
     print("temp disabled")
     print("hash:")
     print(block['Header']['hash'])
