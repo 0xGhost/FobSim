@@ -6,6 +6,7 @@ import matplotlib
 # matplotlib.use('TkAgg')
 
 filename = 'failrate_input.csv'
+postfix = ''
 failrate_limit1 = 0.00
 failrate_limit2 = 0.05
 failrate_limit3 = 0.10
@@ -14,16 +15,16 @@ failrate_limit3 = 0.10
 if len(sys.argv) >= 2:
     filename = sys.argv[1]
 
-if len(sys.argv) >= 5:
-    failrate_limit1 = sys.argv[2]
-    failrate_limit2 = sys.argv[3]
-    failrate_limit3 = sys.argv[4]
-    
+if len(sys.argv) >= 3:
+    postfix = sys.argv[2]
 
+# if len(sys.argv) >= 5:
+#     failrate_limit1 = sys.argv[2]
+#     failrate_limit2 = sys.argv[3]
+#     failrate_limit3 = sys.argv[4]
 
 # read the CSV file into a pandas DataFrame
 df = pd.read_csv(filename)
-
 
 
 
@@ -37,8 +38,9 @@ df_weighted_avg_block_time['avg_block_time'] = df_weighted_avg_block_time['weigh
 df_weighted_avg_block_time = df_weighted_avg_block_time.drop(columns=['weighted_block_time', 'final No. block'])
 
 # Write the result to an Excel file
-df_weighted_avg_block_time.to_excel('avg_block_time.xlsx', index=False)
+df_weighted_avg_block_time.to_excel('avg_block_time'+postfix+'.xlsx', index=False)
 print("Excel weighted average block time result file (tx per block only) generated")
+
 
 
 
@@ -55,7 +57,7 @@ df_rate['success_rate'] = df_rate['success_count'] / df_rate['total_count']
 df_rate['fail_rate'] = 1.0 - df_rate['success_rate']
 
 # write the result to an Excel file
-df_rate.to_excel('failrate_result.xlsx', index=False)
+df_rate.to_excel('failrate_result'+postfix+'.xlsx', index=False)
 print("Excel result file generated")
 
 ################################################################################### show result curves
@@ -89,7 +91,7 @@ plt.legend()
 
 # Save plot to file
 plt.subplots_adjust(left = 0.01, right = 0.99)
-plt.savefig("failrate_plot.png")
+plt.savefig('failrate_plot'+postfix+'.png')
 print("Plot file generated")
 
 # Function to find the maximum injection rate for a given fail rate condition
@@ -127,5 +129,5 @@ df_max_injection_merged = pd.merge(df_max_injection_merged_0_5, df_max_injection
 
 
 # Write the result to an Excel file
-df_max_injection_merged.to_excel('max_injection_rate.xlsx', index=False)
+df_max_injection_merged.to_excel('max_injection_rate'+postfix+'.xlsx', index=False)
 print("Excel max injection rate result file for multiple conditions generated")
