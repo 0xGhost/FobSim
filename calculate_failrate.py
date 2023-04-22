@@ -1,8 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 import sys
 import numpy
+import math
 import matplotlib
+from sklearn.metrics import r2_score
 # matplotlib.use('TkAgg')
 
 filename = 'failrate_input.csv'
@@ -10,6 +13,8 @@ postfix = ''
 failrate_limit1 = 0.00
 failrate_limit2 = 0.05
 failrate_limit3 = 0.10
+
+log_fit_col = 1
 
 #handle console arguments
 if len(sys.argv) >= 2:
@@ -92,7 +97,7 @@ plt.legend()
 # Save plot to file
 plt.subplots_adjust(left = 0.01, right = 0.99)
 plt.savefig('failrate_plot'+postfix+'.png')
-print("Plot file generated")
+print("failrate plot file generated")
 
 # Function to find the maximum injection rate for a given fail rate condition
 def find_max_injection_rate(df, fail_rate_condition):
@@ -131,3 +136,54 @@ df_max_injection_merged = pd.merge(df_max_injection_merged_0_5, df_max_injection
 # Write the result to an Excel file
 df_max_injection_merged.to_excel('max_injection_rate'+postfix+'.xlsx', index=False)
 print("Excel max injection rate result file for multiple conditions generated")
+
+
+xdata = df_max_injection_1['tx per block']
+ydata = df_max_injection_1.iloc[:, log_fit_col]
+# ydata = df_max_injection_1['fail_rate<=0%']
+# ydata = df_max_injection_2['fail_rate<=5%']
+# ydata = df_max_injection_3['fail_rate<=10%']
+
+
+# Define the logarithmic function to fit to the data
+def log_func(x, a, b, c):
+    # return a + b * numpy.log(d * x) + c * x
+    return a + b * numpy.log(x) + c * x
+    # return a * numpy.log(x) + b + c
+
+def exponential_func(x, a, b, c, d):
+    return a + b * x + c * numpy.exp(d * x)
+
+guess = [100, 0.1, -50, -0.1]
+# Perform the curve fitting
+popt1, pcov1 = curve_fit(log_func, xdata, ydata)
+popt2, pcov2 = curve_fit(exponential_func, xdata, ydata, guess)
+y1 = log_func(xdata, *popt1)
+y2 = exponential_func(xdata, *popt2)
+
+print(popt1)
+print(pcov1)
+print('[log] R^2: ', r2_score(ydata, y1))
+
+print(popt2)
+print(pcov2)
+print('[exp] R^2: ', r2_score(ydata, y2))
+
+# Plot the data and the fitted curve
+fig = plt.figure()
+fig.set_figwidth(30)
+fig.set_figheight(10)
+plt.plot(xdata, ydata, 'b-', label='data')
+
+plt.plot(xdata, y1, 'r-', label='log_fit')
+plt.plot(xdata, y2, 'g-', label='exp_fit')
+
+plt.xlabel('tx per block')
+plt.ylabel('max injection rate')
+plt.legend()
+# plt.show()
+
+# Save plot to file
+# plt.subplots_adjust(left = 0.01, right = 0.99)
+plt.savefig('logarithmic_fitting'+postfix+'.png')
+print("curve fitting plot file generated")

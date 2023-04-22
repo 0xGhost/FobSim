@@ -56,8 +56,10 @@ txPerBlock_length=${#txPerBlock[@]}
 
 for ((i = 0; i < txPerBlock_length; i++))
 do
-    # for j in $(seq $injectionRate1 $step $injectionRate3); 
-    for j in $(seq ${injectionRate1[$i]} $step ${injectionRate3[$i]}); 
+    # for j in $(seq $injectionRate1 $step $injectionRate3);
+    # for j in $(seq ${injectionRate1[$i]:-0}+5 $step ${injectionRate3[$i]}); 
+    for j in $(seq $((${injectionRate1[$i]}+5)) $step ${injectionRate3[$i]}); 
+    # for j in $(seq ${injectionRate1[$i]} $step ${injectionRate3[$i]}); 
     # for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
     do
         for k in {1..100} # runs
