@@ -21,7 +21,7 @@
   "TX_injection_rate" : 16384.0,
   "QueueTooLongLimit" : 300,
   "FailPendingTime" : -2, "_4" : "seond",
-  "UploadBandwidth" : 200, "_2" : "KB per second",
-  "DownloadBandwidth" : 400,
+  "UploadBandwidth" : 300, "_2" : "KB per second",
+  "DownloadBandwidth" : 600,
   "FastPoS" : true
 }
