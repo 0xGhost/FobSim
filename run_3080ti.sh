@@ -49,9 +49,14 @@ txPerBlock=(5   10  15  20  25  30  35  40  45 50 55 60 65 70 75 80 85 90 95)
 # injectionRate1=(100 400 550  850 1100 1350 1600 2000 2400) 
 # injectionRate3=(3000 6000 8500 12000 16000 19000 22000 28000 32000)
 
-#                 1    2    3    4    5    6    7    8    9    10   11   12   13   14   15   16   17   18   19
+#                 1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19
+# up100 down200
 injectionRate1=(50   50    50   60   70   80   90  100  100  100  100  100  100  100  100  100  100  100  100) 
 injectionRate3=(100  120  160  170  180  200  210  220  220  220  220  250  250  250  250  250  300  300  300)
+# up200 down400
+injectionRate1=(100  125  150  180  190  195  200  200  200  200  200  200  200  200  200  200  200  200  200) 
+injectionRate3=(175  215  235  250  260  270  280  300  300  300  300  300  300  300  300  300  300  300  300)
+
 # injectionRate1=50
 # injectionRate3=500
 
@@ -70,8 +75,8 @@ txPerBlock_length=${#txPerBlock[@]}
 for ((i = 0; i < txPerBlock_length; i++))
 do
     # for j in $(seq $injectionRate1 $step $injectionRate3); 
-    for j in $(seq ${injectionRate1[$i]} $step ${injectionRate3[$i]}); 
-    # for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
+    # for j in $(seq $((${injectionRate1[$i]}+50)) $step $((${injectionRate3[$i]}+100))); 
+    for j in $(seq ${injectionRate1[$i]} ${step[$i]} ${injectionRate3[$i]}); 
     do
         for k in {1..100} # runs
         do
