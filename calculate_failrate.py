@@ -160,14 +160,24 @@ popt1, pcov1 = curve_fit(log_func, xdata, ydata)
 popt2, pcov2 = curve_fit(exponential_func, xdata, ydata, guess)
 y1 = log_func(xdata, *popt1)
 y2 = exponential_func(xdata, *popt2)
+log_func_str = 'y = '+str(popt1[0])+' + '+str(popt1[1])+' * log(x) + '+str(popt1[2])+' * x'
+exp_func_str = 'y = '+ str(popt2[0]) + ' + ' + str(popt2[1]) + ' * x + '+ str(popt2[2]) + ' * e ^ (' + str(popt2[3]) + ' * x )'
+log_r2_score = str(r2_score(ydata, y1))
+exp_r2_score = str(r2_score(ydata, y2))
 
+print('--------------------------------------------------------------')
+print('[log] R^2: ', log_r2_score)
+print(log_func_str)
 print(popt1)
 print(pcov1)
-print('[log] R^2: ', r2_score(ydata, y1))
+print('--------------------------------------------------------------')
 
+print('--------------------------------------------------------------')
+print('[exp] R^2: ', r2_score(ydata, y2))
+print('y =', popt2[0], '+', popt2[1], '* x +', popt2[2], '* e ^ (', popt2[3], '* x )')
 print(popt2)
 print(pcov2)
-print('[exp] R^2: ', r2_score(ydata, y2))
+print('--------------------------------------------------------------')
 
 # Plot the data and the fitted curve
 fig = plt.figure()
@@ -178,6 +188,7 @@ plt.plot(xdata, ydata, 'b-', label='data')
 plt.plot(xdata, y1, 'r-', label='log_fit')
 plt.plot(xdata, y2, 'g-', label='exp_fit')
 
+plt.title(postfix+' curve fitting\nlog:'+log_func_str+'    R2:'+log_r2_score+'\nexp:'+exp_func_str+'    R2:'+exp_r2_score)
 plt.xlabel('tx per block')
 plt.ylabel('max injection rate')
 plt.legend()
